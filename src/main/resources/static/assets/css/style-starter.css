@@ -21101,6 +21101,7 @@ h4.inner-text-title {
 /* holidays section */
 
 /* contact section */
+
 .contact-block input,
 .contact-block textarea {
   width: 100%;
@@ -21155,6 +21156,68 @@ h4.inner-text-title {
 }
 
 /* //contact section */
+
+
+/* login section */
+.login-block input,
+.login-block textarea {
+  width: 100%;
+  color: var(--heading-color);
+  background: var(--bg-grey);
+  font-size: 16px;
+  padding: 14px;
+  border: 2px solid var(--border-color-light);
+  outline: none;
+  margin-bottom: 20px;
+  border-radius: var(--border-radius);
+}
+
+.log-left.text-center i {
+  color: var(--secondary-color);
+  font-size: 26px;
+}
+
+.login-block textarea {
+  height: 180px;
+  margin: 0 0 20px 0;
+}
+
+.login-block input:focus,
+.login-block textarea:focus {
+  border: 2px solid var(--secondary-color);
+  background: var(--bg-color);
+}
+
+.login-left {
+  box-shadow: var(--box-shadow);
+  padding: 40px;
+}
+
+.login-center {
+  float: none;
+  margin: auto;
+}
+
+.log-details p a:hover {
+  color: var(--secondary-color);
+}
+
+.log-details h6 {
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 18px;
+  margin-bottom: 8px;
+}
+
+.new-user {
+  color: var(--secondary-color);
+  margin-left: 40%;
+}
+
+/* //login section */
+
+
+
 
 /* team block */
 .w3l-team-13 .left-side h4 {
