@@ -21101,7 +21101,6 @@ h4.inner-text-title {
 /* holidays section */
 
 /* contact section */
-
 .contact-block input,
 .contact-block textarea {
   width: 100%;
@@ -21157,7 +21156,6 @@ h4.inner-text-title {
 
 /* //contact section */
 
-
 /* login section */
 .login-block input,
 .login-block textarea {
@@ -21194,8 +21192,8 @@ h4.inner-text-title {
 }
 
 .login-center {
-  float: none;
-  margin: auto;
+    float: none;
+    margin: auto;
 }
 
 .log-details p a:hover {
@@ -21210,14 +21208,42 @@ h4.inner-text-title {
 }
 
 .new-user {
-  color: var(--secondary-color);
-  margin-left: 40%;
+    color: var(--secondary-color);
+    margin-left: 40%;
 }
 
 /* //login section */
 
+/* //error section */
+.page_404  img{
+    width:100%;
+}
 
+.four_zero_four_bg{
+    background-image: url(/assets/images/dribbble.gif);
+    height: 400px;
+    background-position: center;
+ }
 
+.four_zero_four_bg h1{
+    font-size:80px;
+ }
+
+.four_zero_four_bg h3{
+    font-size:80px;
+}
+
+.link_404{
+    padding: 10px 20px;
+    margin: 20px 0;
+    display: inline-block;
+ }
+
+.contant_box_404{
+    margin-top:-50px;
+}
+
+/* //error section */
 
 /* team block */
 .w3l-team-13 .left-side h4 {
