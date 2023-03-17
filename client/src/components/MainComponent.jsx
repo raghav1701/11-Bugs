@@ -1,16 +1,13 @@
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import { ThemeChangeContext } from "../contexts/ThemeChangeContext";
 import { createTheme } from "@mui/material/styles";
-import { Box, ThemeProvider } from "@mui/material";
+import { ThemeProvider } from "@mui/material";
 import { Route, Routes, useNavigate } from "react-router-dom";
 import Home from "./Home/Home";
 import Auth from "./Auth/Auth";
 import Profile from "./Profile/Profile";
 import { UserContext } from "../contexts/UserContext";
 import Login from "./Auth/Login";
-import Settings from "./Misc/Settings";
-import { grey } from "@mui/material/colors";
-import Navbar from "./Navbar/Navbar";
 
 const MainComponent = () => {
   const [mode] = useContext(ThemeChangeContext);
@@ -30,7 +27,7 @@ const MainComponent = () => {
             id: res.id,
           };
         });
-        navigate("/app");
+        navigate("/");
       }
     });
   }, []);
@@ -38,29 +35,12 @@ const MainComponent = () => {
   //   Theme
   const theme = createTheme({
     palette: {
-      mode: mode,
-      background: {
-        paper: mode === "light" ? grey[300] : grey[900],
-        default: mode === "light" ? grey[100] : "#121212",
-      },
+      mode,
     },
   });
 
   return (
     <ThemeProvider theme={theme}>
-      <Box
-        width="100vw"
-        height="100vh"
-        position="fixed"
-        sx={{
-          background: theme.palette.background.default,
-          zIndex: -1,
-          top: 0,
-          left: 0,
-        }}
-      />
-      <Navbar />
-      <Settings />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/profile/:id" element={<Profile />} />

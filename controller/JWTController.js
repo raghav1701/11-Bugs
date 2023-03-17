@@ -1,6 +1,6 @@
 require("dotenv").config();
 const jwt = require("jsonwebtoken");
-const User = require("../models/user");
+const User = require("../models/User");
 
 exports.accessExpiry = 60 * 15; //  15 minutes
 exports.refreshExpiry = 60 * 60 * 24 * 30; //  30 days
