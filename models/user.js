@@ -37,7 +37,7 @@ const UserSchema = mongoose.Schema({
   // Downvote -1
   review: [
     {
-      user: { type: mongoose.Schema.Types.ObjectId, ref: "User", unique: true },
+      user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
       value: { type: Number, default: 0, enum: [-1, 0, 1] },
     },
   ],
