@@ -72,7 +72,7 @@ const Signup = (props) => {
       if (res._id) {
         setUser(res);
         setErrors("");
-        navigate("/app");
+        navigate("/");
       } else {
         setErrors(res.message || "Something went wrong");
       }

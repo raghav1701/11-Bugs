@@ -24,7 +24,7 @@ const Container = styled("div")(({ theme }) => ({
 const Navbar = (props) => {
   const theme = useTheme();
   const [user, setUser] = React.useContext(UserContext);
-  // console.log(user.id);
+  //   console.log(user);
   const pathname = useLocation().pathname;
   const navigate = useNavigate();
 
@@ -34,7 +34,7 @@ const Navbar = (props) => {
       res = await res.json();
       if (!res.success) throw res.error;
       else {
-        navigate("/login");
+        navigate("/auth/signin");
       }
     } catch (e) {
       console.log(e);
@@ -74,29 +74,31 @@ const Navbar = (props) => {
           >
             Profile
           </Typography>
-          <Typography
-            variant="h7"
-            noWrap
-            component="div"
-            sx={{ p: 1, cursor: "pointer" }}
-            color={theme.palette.primary.contrastText}
-          >
-            Login
-          </Typography>
-          {/* {user._id && ( */}
-          <Tooltip title="Logout">
-            <IconButton onClick={handleLogout}>
-              <LogoutIcon
-                sx={{
-                  background: theme.palette.error.main,
-                  color: "white",
-                  p: 1,
-                  borderRadius: "20px",
-                }}
-              />
-            </IconButton>
-          </Tooltip>
-          {/* )} */}
+          {!user._id && (
+            <Typography
+              variant="h7"
+              noWrap
+              component="div"
+              sx={{ p: 1, cursor: "pointer" }}
+              color={theme.palette.primary.contrastText}
+            >
+              Login
+            </Typography>
+          )}
+          {user._id && (
+            <Tooltip title="Logout">
+              <IconButton onClick={handleLogout}>
+                <LogoutIcon
+                  sx={{
+                    background: theme.palette.error.main,
+                    color: "white",
+                    p: 1,
+                    borderRadius: "20px",
+                  }}
+                />
+              </IconButton>
+            </Tooltip>
+          )}
         </Toolbar>
       </AppBar>
     </Container>
