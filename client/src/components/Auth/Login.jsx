@@ -1,5 +1,4 @@
 import React, { useState, useContext } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import Avatar from "@mui/material/Avatar";
@@ -40,7 +39,6 @@ const Login = () => {
   const [errors, setErrors] = useState("");
   const [loader, setLoader] = useState(false);
   const classes = useStyles();
-  const navigate = useNavigate();
   const avatarStyle = { backgroundColor: "#1bbd7e", margin: "20px 0.5rem" };
   const btnstyle = { margin: "8px 0" };
 
@@ -70,7 +68,7 @@ const Login = () => {
       console.log(res);
       if (res._id) {
         setUser(res);
-        navigate("/");
+        history("/");
         setErrors("");
       } else {
         setErrors(res.message || "Something went wrong");
@@ -149,7 +147,7 @@ const Login = () => {
 
         <Typography>
           <NavLink
-            to="/auth/signup"
+            to="/register"
             style={{ textDecoration: "none", color: "black" }}
           >
             Do you have an account?

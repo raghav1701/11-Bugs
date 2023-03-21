@@ -3,7 +3,11 @@ const authController = require("../controller/authController");
 
 // Get a User
 router.get("/user", authController.isAuthenticated, (req, res) => {
-  res.json(req.user);
+  if (req.user) {
+    res.json(req.user);
+  } else {
+    res.json({ error: "Unauthorized user" });
+  }
 });
 
 //Set-up Signup Route
