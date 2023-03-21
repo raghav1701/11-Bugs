@@ -41,6 +41,9 @@ const UserSchema = mongoose.Schema({
       value: { type: Number, default: 0, enum: [-1, 0, 1] },
     },
   ],
+
+  // Friends
+  friends: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
 });
 
 const User = mongoose.model("User", UserSchema);
