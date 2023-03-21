@@ -11,11 +11,12 @@ import Checkbox from "@mui/material/Link";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { makeStyles } from "@mui/styles";
 import { UserContext } from "../../contexts/UserContext";
+import { Box, Card, useTheme } from "@mui/material";
 
 const useStyles = makeStyles((theme) => ({
   container: {
     // width: '100vw',
-    height: "100vh",
+    minHeight: "90vh",
     margin: "0",
     display: "flex",
     alignItems: "center",
@@ -23,6 +24,8 @@ const useStyles = makeStyles((theme) => ({
     // borderRadius: '1rem',
   },
   form: {
+    width: "100%",
+    maxWidth: 350,
     padding: 30,
     margin: "auto",
     display: "flex",
@@ -34,6 +37,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Signup = (props) => {
+  const theme = useTheme();
   const navigate = useNavigate();
   const [user, setUser] = React.useContext(UserContext);
   const [name, setName] = useState("");
@@ -61,6 +65,7 @@ const Signup = (props) => {
         setErrors("Email is Badly Formatted");
         return;
       }
+      setLoader(true);
       let res = await fetch("/auth/signup", {
         method: "POST",
         headers: {
@@ -76,9 +81,11 @@ const Signup = (props) => {
       } else {
         setErrors(res.message || "Something went wrong");
       }
+      setLoader(false);
     } catch (e) {
       console.log(e);
       setErrors("Something went wrong");
+      setLoader(false);
     }
     // console.log(name, email, profession, password);
     // setErrors("");
@@ -86,18 +93,19 @@ const Signup = (props) => {
 
   return (
     <Grid className={classes.container}>
-      <Paper elevation={20} className={classes.form}>
-        <div
-          style={{
+      <Card elevation={5} className={classes.form}>
+        <Box
+          sx={{
+            width: "100%",
             display: "flex",
             alignItems: "center",
           }}
         >
-          <Avatar style={avatarStyle}>
-            <LockOutlinedIcon className={classes.lock} />
+          <Avatar style={avatarStyle} className={classes.lock}>
+            <LockOutlinedIcon />
           </Avatar>
-          <h2>Signup</h2>
-        </div>
+          <Typography>Sign Up</Typography>
+        </Box>
         <TextField
           label="Name"
           variant="outlined"
@@ -137,42 +145,27 @@ const Signup = (props) => {
         {errors ? (
           <Typography style={{ color: "red" }}>{errors}</Typography>
         ) : null}
-        {loader ? (
-          <Button
-            type="submit"
-            color="success"
-            variant="contained"
-            style={btnstyle}
-            fullWidth
-            onClick={submitHandler}
-            // style={{ marginTop: '20px', marginBottom: '15px' }}
-            disabled
-          >
-            Signup
-          </Button>
-        ) : (
-          <Button
-            type="submit"
-            color="success"
-            variant="contained"
-            style={btnstyle}
-            fullWidth
-            onClick={submitHandler}
-            // style={{ marginTop: '20px', marginBottom: '15px' }}
-          >
-            Signup
-          </Button>
-        )}
+        <Button
+          type="submit"
+          color="success"
+          variant="contained"
+          style={btnstyle}
+          fullWidth
+          onClick={submitHandler}
+          disabled={loader}
+        >
+          Signup
+        </Button>
 
         <Typography>
           <NavLink
             to="/auth/signin"
-            style={{ textDecoration: "none", color: "black" }}
+            style={{ color: theme.palette.text.primary }}
           >
             Already have an account?
           </NavLink>
         </Typography>
-      </Paper>
+      </Card>
     </Grid>
   );
 };

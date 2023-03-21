@@ -12,11 +12,12 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { makeStyles } from "@mui/styles";
 
 import { UserContext } from "../../contexts/UserContext";
+import { Box, Card, useTheme } from "@mui/material";
 
 const useStyles = makeStyles((theme) => ({
   container: {
     // width: '100vw',
-    height: "100vh",
+    minHeight: "90vh",
     margin: "0",
     display: "flex",
     alignItems: "center",
@@ -24,6 +25,8 @@ const useStyles = makeStyles((theme) => ({
     // borderRadius: '1rem',
   },
   form: {
+    width: "100%",
+    maxWidth: 350,
     padding: 30,
     margin: "auto",
     display: "flex",
@@ -34,6 +37,7 @@ const useStyles = makeStyles((theme) => ({
   lock: {},
 }));
 const Login = () => {
+  const theme = useTheme();
   const [user, setUser] = useContext(UserContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -41,7 +45,7 @@ const Login = () => {
   const [loader, setLoader] = useState(false);
   const classes = useStyles();
   const navigate = useNavigate();
-  const avatarStyle = { backgroundColor: "#1bbd7e", margin: "20px 0.5rem" };
+  const avatarStyle = { backgroundColor: "#1bbd7e", margin: "auto 0.5rem" };
   const btnstyle = { margin: "8px 0" };
 
   const submitHandler = async (e) => {
@@ -59,6 +63,7 @@ const Login = () => {
         return;
       }
       // console.log(email,password);
+      setLoader(true);
       let res = await fetch("/auth/signin", {
         method: "POST",
         headers: {
@@ -75,17 +80,20 @@ const Login = () => {
       } else {
         setErrors(res.message || "Something went wrong");
       }
+      setLoader(false);
     } catch (e) {
       console.log(e);
       setErrors("Something went wrong");
+      setLoader(false);
     }
   };
 
   return (
     <Grid className={classes.container}>
-      <Paper elevation={20} className={classes.form}>
-        <div
-          style={{
+      <Card elevation={5} className={classes.form}>
+        <Box
+          sx={{
+            width: "100%",
             display: "flex",
             alignItems: "center",
           }}
@@ -93,8 +101,8 @@ const Login = () => {
           <Avatar style={avatarStyle} className={classes.lock}>
             <LockOutlinedIcon />
           </Avatar>
-          <h2>Log In</h2>
-        </div>
+          <Typography>Log In</Typography>
+        </Box>
         <TextField
           label="Email"
           variant="outlined"
@@ -122,40 +130,27 @@ const Login = () => {
         {errors ? (
           <Typography style={{ color: "red" }}>{errors}</Typography>
         ) : null}
-        {loader ? (
-          <Button
-            type="submit"
-            color="success"
-            variant="contained"
-            style={btnstyle}
-            fullWidth
-            onClick={submitHandler}
-            disabled
-          >
-            Sign in
-          </Button>
-        ) : (
-          <Button
-            type="submit"
-            color="success"
-            variant="contained"
-            style={btnstyle}
-            fullWidth
-            onClick={submitHandler}
-          >
-            Sign in
-          </Button>
-        )}
+        <Button
+          type="submit"
+          color="success"
+          variant="contained"
+          style={btnstyle}
+          fullWidth
+          onClick={submitHandler}
+          disabled={loader}
+        >
+          Sign in
+        </Button>
 
         <Typography>
           <NavLink
             to="/auth/signup"
-            style={{ textDecoration: "none", color: "black" }}
+            style={{ color: theme.palette.text.primary }}
           >
             Do you have an account?
           </NavLink>
         </Typography>
-      </Paper>
+      </Card>
     </Grid>
   );
 };

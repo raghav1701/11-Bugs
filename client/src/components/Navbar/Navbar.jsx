@@ -1,107 +1,101 @@
 import * as React from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import { styled, alpha } from "@mui/material/styles";
+import { Link, NavLink } from "react-router-dom";
+import { styled } from "@mui/material/styles";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
-import { Tooltip, useTheme } from "@mui/material";
+import { Avatar, Button, Tooltip, useTheme } from "@mui/material";
 import { UserContext } from "../../contexts/UserContext";
-import LogoutIcon from "@mui/icons-material/Logout";
+import ProfilePop from "./ProfilePop";
+import Brightness4Icon from "@mui/icons-material/Brightness4";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import { makeStyles } from "@mui/styles";
+import { ThemeChangeContext } from "../../contexts/ThemeChangeContext";
+
+const useStyles = makeStyles((theme) => ({
+  options: {
+    margin: theme.spacing(1),
+  },
+}));
 
 const EmptySpace = styled("div")(({ theme }) => ({
   flexGrow: 1,
   margin: "auto 1rem",
 }));
 
-const Container = styled("div")(({ theme }) => ({
-  // position: 'fixed',
-  display: "flex",
-  alignItems: "center",
-  width: "100%",
-}));
-
 const Navbar = (props) => {
   const theme = useTheme();
+  const classes = useStyles();
+  const [mode, changeMode] = React.useContext(ThemeChangeContext);
   const [user, setUser] = React.useContext(UserContext);
-  //   console.log(user);
-  const pathname = useLocation().pathname;
-  const navigate = useNavigate();
+  const [profilePop, setProfilePop] = React.useState({
+    open: false,
+    anchor: null,
+  });
 
-  const handleLogout = async () => {
-    try {
-      let res = await fetch("/auth/logout", { method: "POST" });
-      res = await res.json();
-      if (!res.success) throw res.error;
-      else {
-        navigate("/auth/signin");
-      }
-    } catch (e) {
-      console.log(e);
-    }
+  const handleProfilePopOpen = (event) => {
+    setProfilePop({ open: true, anchor: event.currentTarget });
+  };
+
+  const handleProfilePopClose = () => {
+    setProfilePop({ open: false, anchor: null });
   };
 
   return (
-    <Container>
-      <AppBar position="static">
-        <Toolbar
-          style={{
-            minHeight: "10vh",
-            height: "10vh",
-          }}
-        >
-          <Link style={{ textDecoration: "none" }} to="/">
-            <Typography
-              variant="h6"
-              noWrap
-              component="div"
-              color={theme.palette.primary.contrastText}
-              sx={{
-                // flexGrow: 1,
-                display: { sm: "block" },
-              }}
-            >
-              11 BUGS
-            </Typography>
-          </Link>
-          <EmptySpace />
+    <AppBar
+      position="sticky"
+      sx={{ p: 1, background: theme.palette.background.default }}
+    >
+      <Toolbar
+        style={{
+          minHeight: "10vh",
+          height: "10vh",
+        }}
+      >
+        <Link style={{ textDecoration: "none" }} to="/">
           <Typography
-            variant="h7"
+            variant="h6"
             noWrap
             component="div"
-            sx={{ p: 1, cursor: "pointer" }}
-            color={theme.palette.primary.contrastText}
+            color={theme.palette.text.primary}
           >
-            Profile
+            11 BUGS
           </Typography>
-          {!user._id && (
-            <Typography
-              variant="h7"
-              noWrap
-              component="div"
-              sx={{ p: 1, cursor: "pointer" }}
-              color={theme.palette.primary.contrastText}
-            >
-              Login
-            </Typography>
-          )}
-          {user._id && (
-            <Tooltip title="Logout">
-              <IconButton onClick={handleLogout}>
-                <LogoutIcon
-                  sx={{
-                    background: theme.palette.error.main,
-                    color: "white",
-                    p: 1,
-                    borderRadius: "20px",
-                  }}
-                />
+        </Link>
+        <EmptySpace />
+        <Tooltip title="Change Theme" className={classes.options}>
+          <IconButton onClick={changeMode}>
+            <Brightness4Icon />
+          </IconButton>
+        </Tooltip>
+        {user._id ? (
+          <>
+            <Tooltip title="Profile" className={classes.options}>
+              <IconButton onClick={handleProfilePopOpen}>
+                <AccountCircleIcon />
               </IconButton>
             </Tooltip>
-          )}
-        </Toolbar>
-      </AppBar>
-    </Container>
+
+            <ProfilePop
+              open={profilePop.open}
+              anchor={profilePop.anchor}
+              handleClose={handleProfilePopClose}
+            />
+          </>
+        ) : (
+          <Link
+            to="/auth/signin"
+            style={{ textDecoration: "none" }}
+            className={classes.options}
+          >
+            <Button color="primary" variant="contained">
+              Login
+            </Button>
+          </Link>
+        )}
+      </Toolbar>
+    </AppBar>
   );
 };
 

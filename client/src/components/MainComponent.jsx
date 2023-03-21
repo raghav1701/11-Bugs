@@ -1,14 +1,13 @@
 import { useContext, useEffect } from "react";
 import { ThemeChangeContext } from "../contexts/ThemeChangeContext";
 import { createTheme } from "@mui/material/styles";
-import { Box, ThemeProvider } from "@mui/material";
+import { Box, Container, ThemeProvider, GlobalStyles } from "@mui/material";
 import { Route, Routes, useNavigate } from "react-router-dom";
 import Home from "./Home/Home";
 import Auth from "./Auth/Auth";
 import Profile from "./Profile/Profile";
 import { UserContext } from "../contexts/UserContext";
 import Login from "./Auth/Login";
-import Settings from "./Misc/Settings";
 import { grey } from "@mui/material/colors";
 import Navbar from "./Navbar/Navbar";
 import Signup from "./Auth/SignUp";
@@ -30,6 +29,8 @@ const MainComponent = () => {
       console.log(error);
     }
   };
+
+  // Effect
   useEffect(() => {
     fetchUser()
       .then((res) => {
@@ -54,14 +55,35 @@ const MainComponent = () => {
     palette: {
       mode: mode,
       background: {
-        paper: mode === "light" ? grey[300] : grey[900],
-        default: mode === "light" ? grey[100] : "#121212",
+        paper: mode === "light" ? grey[300] : grey[800],
+        default: mode === "light" ? grey[100] : grey[900],
       },
     },
   });
 
   return (
     <ThemeProvider theme={theme}>
+      <GlobalStyles
+        styles={{
+          "&::-webkit-scrollbar, & *::-webkit-scrollbar": {
+            backgroundColor: theme.palette.background.default,
+            width: 10,
+            height: 8,
+          },
+          "&::-webkit-scrollbar-thumb, & *::-webkit-scrollbar-thumb": {
+            backgroundColor: mode === "light" ? grey[400] : grey[800],
+            borderRadius: 10,
+          },
+          "&::-webkit-scrollbar-thumb:focus, & *::-webkit-scrollbar-thumb:focus":
+            {
+              backgroundColor: mode === "light" ? grey[500] : grey[700],
+            },
+          "&::-webkit-scrollbar-thumb:hover, & *::-webkit-scrollbar-thumb:hover":
+            {
+              backgroundColor: mode === "light" ? grey[500] : grey[700],
+            },
+        }}
+      />
       <Box
         width="100vw"
         height="100vh"
@@ -74,14 +96,15 @@ const MainComponent = () => {
         }}
       />
       <Navbar />
-      <Settings />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/profile/:id" element={<Profile />} />
-        <Route path="/auth" element={<Auth />} />
-        <Route path="/auth/signin" element={<Login />} />
-        <Route path="/auth/signup" element={<Signup />} />
-      </Routes>
+      <Container>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/profile/:id" element={<Profile />} />
+          <Route path="/auth" element={<Auth />} />
+          <Route path="/auth/signin" element={<Login />} />
+          <Route path="/auth/signup" element={<Signup />} />
+        </Routes>
+      </Container>
     </ThemeProvider>
   );
 };
