@@ -8,6 +8,7 @@ const cookieParser = require("cookie-parser");
 const home = require("./routes/home");
 const auth = require("./routes/auth");
 const profile = require("./routes/profile");
+const scrap = require("./routes/scrap");
 const friends = require("./routes/friends");
 
 // PORT
@@ -26,6 +27,9 @@ app.use(express.static(path.resolve(__dirname, "./client/build")));
 app.use("/", home);
 app.use("/profile", profile);
 app.use("/auth", auth);
+
+app.use("/scrap", scrap);
+
 app.use("/friends", friends);
 if (process.env.NODE_ENV === "production") {
   // Basename is client should be '/app'

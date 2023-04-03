@@ -30,6 +30,28 @@ exports.calculateGithub = (details) => {
   }
 };
 
+exports.calculateCodeForces = (details) => {
+  try {
+    const { rating } = details;
+    var cost = 100 / 10;
+    if (rating < 1200) return cost;
+    return Math.max((Math.ceil((rating - 1200) / 225) + 1) * cost, 100);
+  } catch (e) {
+    return e;
+  }
+};
+
+exports.calculateCodeChef = (details) => {
+  try {
+    const { rating } = details;
+    var cost = 100 / 22;
+    if (rating < 1000) return cost;
+    return Math.max((Math.ceil((rating - 1000) / 100) + 1) * cost, 100);
+  } catch (e) {
+    return e;
+  }
+};
+
 // Calculate the total karma
 // github, codechef, codeforces, upvotes, downvotes
 // 0-100
