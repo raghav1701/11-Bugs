@@ -4,8 +4,14 @@ const User = require("../models/User");
 const errorHander = require("../handler/error");
 
 // Return a user profile
-router.get("/", authController.isAuthenticated, (req, res) => {
+router.get("/:id", async (req, res) => {
   try {
+    const id = req.params.id;
+    const user = await User.findById(id)
+      .select("-password")
+      .populate("friends", "name avatar");
+    if (!user) return errorHander.handleNotFound(res, "User Not Found");
+    res.status(200).json({ user });
   } catch (error) {
     errorHander.handleInternalServer(res);
   }

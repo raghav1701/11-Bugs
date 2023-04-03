@@ -45,14 +45,9 @@ const Navbar = (props) => {
   return (
     <AppBar
       position="sticky"
-      sx={{ p: 1, background: theme.palette.background.default }}
+      sx={{ background: theme.palette.background.paper }}
     >
-      <Toolbar
-        style={{
-          minHeight: "10vh",
-          height: "10vh",
-        }}
-      >
+      <Toolbar>
         <Link style={{ textDecoration: "none" }} to="/">
           <Typography
             variant="h6"

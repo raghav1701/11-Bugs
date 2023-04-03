@@ -42,7 +42,7 @@ const MainComponent = () => {
             };
           });
           console.log("Logged in");
-          navigate("/");
+          // navigate("/");
         }
       })
       .catch((error) => {
@@ -65,8 +65,11 @@ const MainComponent = () => {
     <ThemeProvider theme={theme}>
       <GlobalStyles
         styles={{
-          "&::-webkit-scrollbar, & *::-webkit-scrollbar": {
+          html: {
             backgroundColor: theme.palette.background.default,
+          },
+          "&::-webkit-scrollbar, & *::-webkit-scrollbar": {
+            backgroundColor: "transparent",
             width: 10,
             height: 8,
           },
