@@ -1,5 +1,5 @@
-import React, { useState, useContext } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import React, { useState } from "react";
+import { NavLink, useHistory, useNavigate } from "react-router-dom";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import Avatar from "@mui/material/Avatar";
@@ -10,7 +10,6 @@ import Link from "@mui/material/Link";
 import Checkbox from "@mui/material/Link";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { makeStyles } from "@mui/styles";
-
 import { UserContext } from "../../contexts/UserContext";
 import { Box, Card, useTheme } from "@mui/material";
 
@@ -36,25 +35,29 @@ const useStyles = makeStyles((theme) => ({
   },
   lock: {},
 }));
-const Login = () => {
+
+const Signup = (props) => {
   const theme = useTheme();
-  const [user, setUser] = useContext(UserContext);
+  const navigate = useNavigate();
+  const [user, setUser] = React.useContext(UserContext);
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState("");
   const [loader, setLoader] = useState(false);
+
   const classes = useStyles();
-  const navigate = useNavigate();
   const avatarStyle = { backgroundColor: "#1bbd7e", margin: "auto 0.5rem" };
   const btnstyle = { margin: "8px 0" };
 
   const submitHandler = async (e) => {
     e.preventDefault();
     try {
-      if (!email || !password) {
+      if (!name || !email || !password) {
         setErrors("Please Fill the details");
         return;
       }
+
       // Check if Email is Valid or not
       let regex = new RegExp("[a-z0-9]+@[a-z]+.[a-z]{2,3}");
       const result = await regex.test(email);
@@ -62,21 +65,19 @@ const Login = () => {
         setErrors("Email is Badly Formatted");
         return;
       }
-      // console.log(email,password);
       setLoader(true);
-      let res = await fetch("/auth/signin", {
+      let res = await fetch("/auth/signup", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ name, email, password }),
       });
       res = await res.json();
-      console.log(res);
       if (res._id) {
         setUser(res);
-        navigate("/");
         setErrors("");
+        navigate("/");
       } else {
         setErrors(res.message || "Something went wrong");
       }
@@ -86,6 +87,8 @@ const Login = () => {
       setErrors("Something went wrong");
       setLoader(false);
     }
+    // console.log(name, email, profession, password);
+    // setErrors("");
   };
 
   return (
@@ -101,8 +104,20 @@ const Login = () => {
           <Avatar style={avatarStyle} className={classes.lock}>
             <LockOutlinedIcon />
           </Avatar>
-          <Typography>Log In</Typography>
+          <Typography>Sign Up</Typography>
         </Box>
+        <TextField
+          label="Name"
+          variant="outlined"
+          placeholder="Enter name"
+          fullWidth
+          required
+          style={{ marginTop: "20px" }}
+          name="name"
+          id="name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        />
         <TextField
           label="Email"
           variant="outlined"
@@ -113,7 +128,7 @@ const Login = () => {
           name="email"
           id="email"
           value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          onChange={(e) => setEmail(e.target.value.toLowerCase())}
         />
         <TextField
           label="Password"
@@ -139,15 +154,15 @@ const Login = () => {
           onClick={submitHandler}
           disabled={loader}
         >
-          Sign in
+          Signup
         </Button>
 
         <Typography>
           <NavLink
-            to="/auth/signup"
+            to="/auth/signin"
             style={{ color: theme.palette.text.primary }}
           >
-            Do you have an account?
+            Already have an account?
           </NavLink>
         </Typography>
       </Card>
@@ -155,4 +170,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Signup;
