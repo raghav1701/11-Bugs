@@ -1,6 +1,6 @@
 require("dotenv").config();
 const jwt = require("jsonwebtoken");
-const User = require("../models/User");
+const User = require("../models/user");
 
 exports.accessExpiry = 60 * 15; //  15 minutes
 exports.refreshExpiry = 60 * 60 * 24 * 30; //  30 days
@@ -17,7 +17,8 @@ exports.setCookies = (res, user) => {
     res.cookie(
       "user",
       JSON.stringify({
-        _id: user._id,
+        ...user,
+        password: "",
       }),
       {
         httpOnly: false,
@@ -40,7 +41,8 @@ exports.createJWT = (user) => {
   try {
     return jwt.sign(
       {
-        _id: user._id,
+        ...user,
+        password: "",
       },
       process.env.JWT_SECRET,
       {
@@ -54,7 +56,7 @@ exports.createJWT = (user) => {
 
 // Create a new refresh token
 exports.createRefreshToken = (user) => {
-  return jwt.sign({ _id: user._id }, process.env.JWT_SECRET, {
+  return jwt.sign({ ...user, password: "" }, process.env.JWT_SECRET, {
     expiresIn: this.refreshExpiry,
   });
 };

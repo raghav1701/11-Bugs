@@ -1,5 +1,4 @@
 import React, { useState, useContext } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import Avatar from "@mui/material/Avatar";
@@ -12,12 +11,11 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { makeStyles } from "@mui/styles";
 
 import { UserContext } from "../../contexts/UserContext";
-import { Box, Card, useTheme } from "@mui/material";
 
 const useStyles = makeStyles((theme) => ({
   container: {
     // width: '100vw',
-    minHeight: "90vh",
+    height: "100vh",
     margin: "0",
     display: "flex",
     alignItems: "center",
@@ -25,8 +23,6 @@ const useStyles = makeStyles((theme) => ({
     // borderRadius: '1rem',
   },
   form: {
-    width: "100%",
-    maxWidth: 350,
     padding: 30,
     margin: "auto",
     display: "flex",
@@ -37,15 +33,13 @@ const useStyles = makeStyles((theme) => ({
   lock: {},
 }));
 const Login = () => {
-  const theme = useTheme();
   const [user, setUser] = useContext(UserContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState("");
   const [loader, setLoader] = useState(false);
   const classes = useStyles();
-  const navigate = useNavigate();
-  const avatarStyle = { backgroundColor: "#1bbd7e", margin: "auto 0.5rem" };
+  const avatarStyle = { backgroundColor: "#1bbd7e", margin: "20px 0.5rem" };
   const btnstyle = { margin: "8px 0" };
 
   const submitHandler = async (e) => {
@@ -63,7 +57,6 @@ const Login = () => {
         return;
       }
       // console.log(email,password);
-      setLoader(true);
       let res = await fetch("/auth/signin", {
         method: "POST",
         headers: {
@@ -75,25 +68,22 @@ const Login = () => {
       console.log(res);
       if (res._id) {
         setUser(res);
-        navigate("/");
+        history("/");
         setErrors("");
       } else {
         setErrors(res.message || "Something went wrong");
       }
-      setLoader(false);
     } catch (e) {
       console.log(e);
       setErrors("Something went wrong");
-      setLoader(false);
     }
   };
 
   return (
     <Grid className={classes.container}>
-      <Card elevation={5} className={classes.form}>
-        <Box
-          sx={{
-            width: "100%",
+      <Paper elevation={20} className={classes.form}>
+        <div
+          style={{
             display: "flex",
             alignItems: "center",
           }}
@@ -101,8 +91,8 @@ const Login = () => {
           <Avatar style={avatarStyle} className={classes.lock}>
             <LockOutlinedIcon />
           </Avatar>
-          <Typography>Log In</Typography>
-        </Box>
+          <h2>Log In</h2>
+        </div>
         <TextField
           label="Email"
           variant="outlined"
@@ -130,27 +120,40 @@ const Login = () => {
         {errors ? (
           <Typography style={{ color: "red" }}>{errors}</Typography>
         ) : null}
-        <Button
-          type="submit"
-          color="success"
-          variant="contained"
-          style={btnstyle}
-          fullWidth
-          onClick={submitHandler}
-          disabled={loader}
-        >
-          Sign in
-        </Button>
+        {loader ? (
+          <Button
+            type="submit"
+            color="success"
+            variant="contained"
+            style={btnstyle}
+            fullWidth
+            onClick={submitHandler}
+            disabled
+          >
+            Sign in
+          </Button>
+        ) : (
+          <Button
+            type="submit"
+            color="success"
+            variant="contained"
+            style={btnstyle}
+            fullWidth
+            onClick={submitHandler}
+          >
+            Sign in
+          </Button>
+        )}
 
         <Typography>
           <NavLink
-            to="/auth/signup"
-            style={{ color: theme.palette.text.primary }}
+            to="/register"
+            style={{ textDecoration: "none", color: "black" }}
           >
             Do you have an account?
           </NavLink>
         </Typography>
-      </Card>
+      </Paper>
     </Grid>
   );
 };
