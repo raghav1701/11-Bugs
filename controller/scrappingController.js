@@ -8,120 +8,223 @@ const htmlparser = async (url) => {
   return data;
 };
 
-//codechef scrapping
-exports.cc_scrapping = async (req, res) => {
-  const username = req.params.cc_name;
-  const dom = await htmlparser(
-    "https://www.codechef.com/users/gennady.korotkevich"
-  );
-  const $ = cheerio.load(dom);
+// github scrapping
+exports.gh_scrapping = async (req, res) => {
+  try {
+    const username = req.params.gh_name;
+    const dom = await htmlparser(`https://github.com/${username}`);
 
-  const content = $(".content").children();
-  // code chef rating
-  // console.log(content.find(".rating-number").text());
-  // stars
-  // console.log(content.find(".rating-star").text().length);
-  // max rating
-  // console.log(content.find("small").text().match(/\d+/g)[0]);
-  // ranking
-  // gloabl
-  // console.log(content.find(".rating-ranks .inline-list strong").text()[0])
-  // country
-  // console.log(content.find(".rating-ranks .inline-list strong").text()[1])
+    const $ = cheerio.load(dom);
+    const content = $(".js-pinned-items-reorder-container ol").children();
 
-  // submission
+    let pinned_repos = [];
 
-  const fully_partially_content = $(".problems-solved .content h5");
-  const fully_solved = fully_partially_content.text().match(/\d+/g)[0];
-  const partially_solved = fully_partially_content.text().match(/\d+/g)[1];
-  console.log(fully_partially_content.text().match(/\d+/g));
-  console.log(fully_solved);
-  console.log(partially_solved);
+    content.each((i, elem) => {
+      $(elem)
+        .find(".pinned-item-list-item-content")
+        .each((j, ele) => {
+          var title, description;
+          if (j == 0) {
+            title = $(ele).find("span").html();
+          }
 
-  res.json({});
+          description = $(ele).find(".pinned-item-desc").text().trim();
+          var stars = 0,
+            forks = 0;
+
+          $(ele)
+            .find(".pinned-item-meta")
+            .each((k, e) => {
+              if (k == 0) {
+                stars = $(e).text().trim();
+              }
+              if (k == 1) {
+                forks = $(e).text().trim();
+              }
+            });
+          let pinned_repo = {
+            Title: title,
+            Description: description,
+            Stars: stars,
+            Forks: forks,
+          };
+          pinned_repos.push(pinned_repo);
+          // console.log(stars);
+          // console.log(forks);
+          // }
+        });
+    });
+
+    const yearly_contributions = $(".js-yearly-contributions h2");
+    console.log($(yearly_contributions).text().match(/\d+/g)[0].trim());
+    // console.log(pinned_repos);
+
+    let star = 0;
+    let repos = 0;
+    let commits = 0;
+
+    let one = `https://api.github.com/users/${username}/repos`;
+    let two = `https://api.github.com/search/commits?q=author:${username}`;
+    // let three =
+    //   "https://api.storyblok.com/v1/cdn/stories/vue?version=published&token=wANpEQEsMYGOwLxwXQ76Ggtt";
+
+    const requestOne = await axios.get(one);
+    const requestTwo = await axios.get(two);
+    // const requestThree = axios.get(three);
+
+    const result1 = requestOne.data;
+    const result2 = requestTwo.data;
+
+    result1.map((elem) => {
+      star = star + elem.stargazers_count;
+      repos++;
+    });
+    commits = result2.total_count;
+    // console.log(star);
+    // console.log(repos);
+    // console.log(commits);
+
+    // res.json({ pinned_repos, star, repos, commits });
+    res.json({
+      stats: [
+        { value: star, label: "Star" },
+        { value: repos, label: "Repository Count" },
+        { value: commits, label: "Total Commits" },
+      ],
+      other: { value: pinned_repos, label: "Pinned Repositories" },
+    });
+  } catch (e) {
+    console.log(e);
+    throw new Error(e);
+  }
 };
 
 //codechef scrapping
-exports.cf_scrapping = async (req, res) => {
-  const username = req.params.cf_name;
-  const dom = await htmlparser(
-    "https://codeforces.com/profile/fffffffffffffffffffff"
-  );
-  const $ = cheerio.load(dom);
+exports.cc_scrapping = async (req, res) => {
+  try {
+    const username = req.params.cc_name;
+    const dom = await htmlparser(`https://www.codechef.com/users/${username}`);
+    const $ = cheerio.load(dom);
 
-  const content = $(".userbox .info").children();
-  const footer = $("._UserActivityFrame_countersRow");
-  const rank = content.find(".user-rank span").text();
-  let rank1 = "Unrated";
-  // console.log($.root().html())
-  // res.json({
-  //     "heml": $.root().html()
-  // })
-  // code chef rating
-  // content.find("ul").each((i, ele) => {
-  //     console.log($(ele).text())
-  // })
-  let curr_rating = 0,
-    max_rating = 0,
-    contributions = 0;
-  if (rank.trim() !== rank1.trim()) {
-    content.find("li").each((i, ele) => {
-      $(ele)
-        .find("span")
-        .each((j, spa) => {
-          if (i == 0 && j == 0) {
-            curr_rating = $(spa).text();
-          }
-          if (i == 0 && j == 3) {
-            max_rating = $(spa).text();
-          }
-          if (i == 1 && j == 0) {
-            contributions = $(spa).text();
-          }
-        });
-      // const curr_rating = $(ele).find(".user-legendary").text().slice(0, 4);
-      // const len = $(ele).find(".user-legendary").text().length;
-      // console.log(curr_rating);
-      // const max_rating = $(ele)
-      //   .find(".user-legendary")
-      //   .text()
-      //   .slice(len - 4, len);
-      // console.log(max_rating);
-      // console.log($(ele).find(".user-legendary").text());
+    const content = $(".content").children();
+    // code chef rating
+    const rating = content.find(".rating-number").text();
+    // stars
+    const stars = content.find(".rating-star").text().length;
+    // max rating
+    const max_rating = content.find("small").text().match(/\d+/g)[0];
+    // ranking
+    // gloabl
+    const content1 = content.find(".rating-ranks ul").children();
+    var global_ranking = 0,
+      country_ranking = 0;
+    $(content1).each((i, elem) => {
+      // console.log(i);
+      if (i == 0) {
+        global_ranking = $(elem).find("a strong").text();
+      }
+      if (i == 1) {
+        country_ranking = $(elem).find("a strong").text();
+      }
     });
+    // const global_ranking = content
+    //   .find(".rating-ranks .inline-list ul")
+    //   .text();
+    // // country
+    // const country_ranking = content
+    //   .find(".rating-ranks .inline-list strong")
+    //   .text();
+
+    // submission
+
+    const fully_partially_content = $(".problems-solved .content h5");
+    const fully_solved = fully_partially_content.text().match(/\d+/g)[0];
+    const partially_solved = fully_partially_content.text().match(/\d+/g)[1];
+    // console.log(fully_partially_content.text().match(/\d+/g));
+    // console.log(fully_solved);
+    // console.log(partially_solved);
+    res.json({
+      stats: [
+        { value: stars, label: "Stars" },
+        { value: max_rating, label: "Maximum Rating" },
+        { value: global_ranking, label: "Gloabal Ranking" },
+        { value: country_ranking, label: "Country Ranking" },
+        { value: fully_solved, label: "Fully Solved Questions" },
+        { value: partially_solved, label: "Partially Solved Questions" },
+      ],
+    });
+  } catch (e) {
+    console.log(e);
+    throw new Error(e);
   }
-  console.log(curr_rating);
-  console.log(max_rating);
-  console.log(contributions);
+};
 
-  let all_time, last_year, last_month;
+//codeForces scrapping
+exports.cf_scrapping = async (req, res) => {
+  try {
+    const username = req.params.cf_name;
+    const dom = await htmlparser(`https://codeforces.com/profile/${username}`);
+    const $ = cheerio.load(dom);
 
-  footer.find("._UserActivityFrame_counter").each((i, elem) => {
-    if (i == 0) {
-      all_time = $(elem).find("._UserActivityFrame_counterValue").text();
+    const content = $(".userbox .info").children();
+    const footer = $("._UserActivityFrame_countersRow");
+    const rank = content.find(".user-rank span").text();
+    let rank1 = "Unrated";
+
+    let curr_rating = 0,
+      max_rating = 0,
+      contributions = 0;
+    if (rank.trim() !== rank1.trim()) {
+      content.find("li").each((i, ele) => {
+        $(ele)
+          .find("span")
+          .each((j, spa) => {
+            if (i == 0 && j == 0) {
+              curr_rating = $(spa).text();
+            }
+            if (i == 0 && j == 3) {
+              max_rating = $(spa).text();
+            }
+            if (i == 1 && j == 0) {
+              contributions = $(spa).text();
+            }
+          });
+      });
     }
-    if (i == 1) {
-      last_year = $(elem).find("._UserActivityFrame_counterValue").text();
-    }
-    if (i == 2) {
-      last_month = $(elem).find("._UserActivityFrame_counterValue").text();
-    }
-  });
+    // console.log(curr_rating);
+    // console.log(max_rating);
+    // console.log(contributions);
 
-  console.log(all_time);
-  console.log(last_year);
-  console.log(last_month);
+    let all_time, last_year, last_month;
 
-  // console.log(content.find(".rating-number").text());
-  // stars
-  // console.log(content.find(".rating-star").text().length);
-  // max rating
-  // console.log(content.find("small").text().match(/\d+/g)[0]);
-  // ranking
-  // gloabl
-  // console.log(content.find(".rating-ranks .inline-list strong").text()[0])
-  // country
-  // console.log(content.find(".rating-ranks .inline-list strong").text()[1])
+    footer.find("._UserActivityFrame_counter").each((i, elem) => {
+      if (i == 0) {
+        all_time = $(elem).find("._UserActivityFrame_counterValue").text();
+      }
+      if (i == 1) {
+        last_year = $(elem).find("._UserActivityFrame_counterValue").text();
+      }
+      if (i == 2) {
+        last_month = $(elem).find("._UserActivityFrame_counterValue").text();
+      }
+    });
 
-  res.json({});
+    // console.log(all_time);
+    // console.log(last_year);
+    // console.log(last_month);
+    res.json({
+      stats: [
+        { value: rank.trim(), label: "Rank" },
+        { value: curr_rating, label: "Current Rating" },
+        { value: max_rating, label: "Maximum Rating" },
+        { value: contributions, label: "Number of Contributions" },
+        { value: all_time, label: "Solved Questions - All Time" },
+        { value: last_year, label: "Solved Questions - Last Year" },
+        { value: last_month, label: "Solved Questions - Last Month" },
+      ],
+    });
+  } catch (e) {
+    console.log(e);
+    throw new Error(e);
+  }
 };

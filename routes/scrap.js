@@ -3,10 +3,13 @@ const scrappingController = require("../controller/scrappingController");
 
 //scrapping
 
-// codechef 
-router.get("/cc/:cc_name", scrappingController.cc_scrapping);
+// github
+router.get("/github/:gh_name", scrappingController.gh_scrapping);
 
-// codeforces 
-router.get("/cf/:cf_name", scrappingController.cf_scrapping);
+// codechef
+router.get("/codechef/:cc_name", scrappingController.cc_scrapping);
 
-module.exports = router
+// codeforces
+router.get("/codeforces/:cf_name", scrappingController.cf_scrapping);
+
+module.exports = router;
