@@ -12,10 +12,16 @@ import Brightness4Icon from "@mui/icons-material/Brightness4";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { makeStyles } from "@mui/styles";
 import { ThemeChangeContext } from "../../contexts/ThemeChangeContext";
+import { alpha } from "@mui/material/styles";
+import BugReportIcon from "@mui/icons-material/BugReport";
 
 const useStyles = makeStyles((theme) => ({
   options: {
     margin: theme.spacing(1),
+  },
+  svg: {
+    fill: theme.palette.text.primary,
+    stroke: theme.palette.text.primary,
   },
 }));
 
@@ -48,15 +54,23 @@ const Navbar = (props) => {
       sx={{ background: theme.palette.background.paper }}
     >
       <Toolbar>
-        <Link style={{ textDecoration: "none" }} to="/">
+        <Link
+          style={{
+            textDecoration: "none",
+            display: "flex",
+            alignItems: "center",
+            color: theme.palette.text.primary,
+          }}
+          to="/"
+        >
           <Typography
-            variant="h6"
-            noWrap
-            component="div"
+            variant="h5"
             color={theme.palette.text.primary}
+            sx={{ verticalAlign: "center", font: "Stencil" }}
           >
-            11 BUGS
+            11
           </Typography>
+          <BugReportIcon sx={{ fontSize: 32 }} />
         </Link>
         <EmptySpace />
         <Tooltip title="Change Theme" className={classes.options}>

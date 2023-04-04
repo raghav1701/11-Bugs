@@ -1,6 +1,7 @@
 import {
   Avatar,
   Box,
+  Button,
   Card,
   CardContent,
   CardHeader,
@@ -8,21 +9,26 @@ import {
   CircularProgress,
   Divider,
   Grid,
+  IconButton,
   Link,
   List,
   SvgIcon,
+  Tooltip,
   Typography,
   useTheme,
 } from "@mui/material";
 import LinkIcon from "@mui/icons-material/Link";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import ScoreCard from "../Misc/ScoreCard";
 import { makeStyles } from "@mui/styles";
 import { useParams } from "react-router-dom";
 import axios from "axios";
-import { FormControlUnstyledContext } from "@mui/base";
 import UserCard from "../Misc/UserCard";
 import Stats from "./Stats";
+import Error from "../Misc/Error";
+import { UserContext } from "../../contexts/UserContext";
+import Edit from "@mui/icons-material/Edit";
+import EditProfileDialog from "./EditProfileDialog";
 
 const useStyles = makeStyles((theme) => ({
   cards: {
@@ -34,7 +40,9 @@ const Profile = () => {
   const theme = useTheme();
   const classes = useStyles();
   const params = useParams();
+  const [user, setUser] = useContext(UserContext);
 
+  const [edit, setEdit] = useState(false);
   const [data, setData] = useState({
     email: "",
     name: "",
@@ -46,11 +54,14 @@ const Profile = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
+  const handleOpen = () => setEdit(true);
+  const handleClose = () => setEdit(false);
+
   const fetchProfile = async () => {
     try {
       setError("");
       setLoading(true);
-      let res = await axios.get(`/profile/${params.id}`);
+      let res = await axios.post(`/profile/${params.id}`);
       setLoading(false);
       return res.data.user;
     } catch (e) {
@@ -84,29 +95,7 @@ const Profile = () => {
       });
   }, [params.id]);
 
-  if (error)
-    return (
-      <Grid container sx={{ height: "100vh" }}>
-        <Grid
-          item
-          xs={12}
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
-        >
-          <CardMedia
-            component="img"
-            image={process.env.PUBLIC_URL + "/sad.svg"}
-            sx={{ width: "100%", maxWidth: 400 }}
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <Typography align="center" color="error">
-            {error}
-          </Typography>
-        </Grid>
-      </Grid>
-    );
+  if (error) return <Error error={error} />;
 
   return (
     <Grid container sx={{ py: theme.spacing(2) }}>
@@ -115,7 +104,7 @@ const Profile = () => {
           <Card sx={{ display: "flex", justifyContent: "center" }}>
             {!loading ? (
               <Box sx={{ width: "100%" }}>
-                <CardContent>
+                <CardContent sx={{ position: "relative" }}>
                   <Grid container>
                     <Grid
                       item
@@ -127,9 +116,23 @@ const Profile = () => {
                     </Grid>
                     <Grid item xs={true} alignSelf="center" align="center">
                       <Typography variant="h6">{data.name}</Typography>
-                      <Typography variant="caption">{data.name}</Typography>
+                      {data.resume && (
+                        <Link href={data.resume}>
+                          <Button startIcon={<LinkIcon />}>Resume</Button>
+                        </Link>
+                      )}
                     </Grid>
                   </Grid>
+                  {user._id === data._id && (
+                    <Tooltip
+                      title="Edit"
+                      sx={{ position: "absolute", right: 0, bottom: 0 }}
+                    >
+                      <IconButton onClick={handleOpen}>
+                        <Edit />
+                      </IconButton>
+                    </Tooltip>
+                  )}
                 </CardContent>
                 <Divider />
                 <CardContent>
@@ -188,6 +191,7 @@ const Profile = () => {
             score={data.scores.github}
             handle={data.handles.github}
             code={"Github"}
+            editable={user._id === data._id}
           />
         </Grid>
         <Grid item sx={{ width: "100%" }} className={classes.cards}>
@@ -195,6 +199,7 @@ const Profile = () => {
             score={data.scores.codeforces}
             handle={data.handles.codeforces}
             code={"Codeforces"}
+            editable={user._id === data._id}
           />
         </Grid>
         <Grid item sx={{ width: "100%" }} className={classes.cards}>
@@ -202,9 +207,13 @@ const Profile = () => {
             score={data.scores.codechef}
             handle={data.handles.codechef}
             code={"Codechef"}
+            editable={user._id === data._id}
           />
         </Grid>
       </Grid>
+      {user._id === data._id && (
+        <EditProfileDialog open={edit} handleClose={handleClose} prev={data} />
+      )}
     </Grid>
   );
 };
