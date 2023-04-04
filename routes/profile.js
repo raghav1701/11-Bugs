@@ -2,6 +2,7 @@ const router = require("express").Router();
 const authController = require("../controller/authController");
 const User = require("../models/User");
 const errorHander = require("../handler/error");
+const scoreController = require("../controller/scoreController");
 
 // Update a profile
 router.patch("/", authController.isAuthenticated, async (req, res) => {
@@ -11,8 +12,46 @@ router.patch("/", authController.isAuthenticated, async (req, res) => {
       email: req.body.email || req.user.email,
       resume: req.body.resume || req.user.resume,
     });
-    console.log(update);
     res.status(200).json({ message: "Updated!" });
+  } catch (error) {
+    console.log(error);
+    errorHander.handleInternalServer(res);
+  }
+});
+
+// Update a profile score
+router.patch("/score", async (req, res) => {
+  try {
+    const { code, score, userID } = req.body;
+
+    const user = await User.findById(userID);
+    if (!user) return errorHander.handleBadRequest(res);
+    const upvoteList = user.review.filter((r) => r.value === 1);
+    const upvotes =
+      upvoteList.length !== 0 ? upvoteList.reduce((p, c) => p + c) : 0;
+
+    const downvoteList = user.review.filter((r) => r.value === -1);
+    const downvotes =
+      downvoteList.length !== 0 ? downvoteList.reduce((p, c) => p + c) : 0;
+
+    const karma = scoreController.calculateKarma({
+      github: user.scores.github,
+      codeforces: user.scores.codeforces,
+      codechef: user.scores.codechef,
+      upvotes,
+      downvotes,
+    });
+
+    if (!code) return errorHander.handleBadRequest(res);
+    const field = {};
+    field["scores." + code.toLowerCase()] = score || 0;
+
+    const update = await User.findByIdAndUpdate(userID, {
+      ...field,
+      karma: karma,
+    });
+
+    res.status(200).json({ karma: karma });
   } catch (error) {
     console.log(error);
     errorHander.handleInternalServer(res);

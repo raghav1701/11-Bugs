@@ -57,6 +57,8 @@ const Profile = () => {
   const handleOpen = () => setEdit(true);
   const handleClose = () => setEdit(false);
 
+  const changeKarma = (score) => setData((prev) => ({ ...prev, karma: score }));
+
   const fetchProfile = async () => {
     try {
       setError("");
@@ -87,7 +89,7 @@ const Profile = () => {
   useEffect(() => {
     fetchProfile()
       .then((res) => {
-        setData(res);
+        setData({ ...res });
       })
       .catch((e) => {
         console.log(e);
@@ -99,9 +101,9 @@ const Profile = () => {
 
   return (
     <Grid container sx={{ py: theme.spacing(2) }}>
-      <Grid item container xs={12} sm={6} md={4}>
+      <Grid container item xs={12} sm={6} md={4}>
         <Grid item xs={12} className={classes.cards}>
-          <Card sx={{ display: "flex", justifyContent: "center" }}>
+          <Card sx={{ display: "flex", justifyContent: "center", mb: 2 }}>
             {!loading ? (
               <Box sx={{ width: "100%" }}>
                 <CardContent sx={{ position: "relative" }}>
@@ -151,8 +153,6 @@ const Profile = () => {
               <CircularProgress sx={{ p: theme.spacing(5) }} />
             )}
           </Card>
-        </Grid>
-        <Grid item xs={12} className={classes.cards}>
           <Card>
             <CardContent>
               <Grid container>
@@ -165,17 +165,21 @@ const Profile = () => {
                   sx={{ display: "flex", justifyContent: "center" }}
                 >
                   {!loading ? (
-                    <List
-                      sx={{
-                        width: "100%",
-                        maxHeight: "60vh",
-                        overflow: "auto",
-                      }}
-                    >
-                      {data.friends.map((f, index) => (
-                        <UserCard user={f} key={f._id} />
-                      ))}
-                    </List>
+                    data.friends.length !== 0 ? (
+                      <List
+                        sx={{
+                          width: "100%",
+                          maxHeight: "60vh",
+                          overflow: "auto",
+                        }}
+                      >
+                        {data.friends.map((f, index) => (
+                          <UserCard user={f} key={f._id} />
+                        ))}
+                      </List>
+                    ) : (
+                      <Typography color="error">No Friends Yet!</Typography>
+                    )
                   ) : (
                     <CircularProgress sx={{ p: theme.spacing(5) }} />
                   )}
@@ -192,22 +196,24 @@ const Profile = () => {
             handle={data.handles.github}
             code={"Github"}
             editable={user._id === data._id}
+            userID={data._id}
+            changeKarma={changeKarma}
           />
-        </Grid>
-        <Grid item sx={{ width: "100%" }} className={classes.cards}>
           <Stats
             score={data.scores.codeforces}
             handle={data.handles.codeforces}
             code={"Codeforces"}
             editable={user._id === data._id}
+            userID={data._id}
+            changeKarma={changeKarma}
           />
-        </Grid>
-        <Grid item sx={{ width: "100%" }} className={classes.cards}>
           <Stats
             score={data.scores.codechef}
             handle={data.handles.codechef}
             code={"Codechef"}
             editable={user._id === data._id}
+            userID={data._id}
+            changeKarma={changeKarma}
           />
         </Grid>
       </Grid>
