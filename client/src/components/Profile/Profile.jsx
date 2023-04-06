@@ -6,13 +6,15 @@ import {
   CardContent,
   CardHeader,
   CardMedia,
+  Chip,
   CircularProgress,
   Divider,
   Grid,
   IconButton,
   Link,
   List,
-  SvgIcon,
+  Tab,
+  Tabs,
   Tooltip,
   Typography,
   useTheme,
@@ -29,6 +31,8 @@ import Error from "../Misc/Error";
 import { UserContext } from "../../contexts/UserContext";
 import Edit from "@mui/icons-material/Edit";
 import EditProfileDialog from "./EditProfileDialog";
+import UserList from "./UserList";
+import Request from "../Misc/Request";
 
 const useStyles = makeStyles((theme) => ({
   cards: {
@@ -50,12 +54,26 @@ const Profile = () => {
     scores: { github: 0, codechef: 0, codeforces: 0 },
     handles: { github: "", codechef: "", codeforces: "" },
     friends: [],
+    sent: [],
+    received: [],
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [tab, setTab] = useState(0);
+  const [mount, setMount] = useState(false);
+
+  const changeMount = () => setMount((prev) => !prev);
+
+  const changeTab = (e, v) => {
+    setTab(v);
+  };
 
   const handleOpen = () => setEdit(true);
   const handleClose = () => setEdit(false);
+
+  const handleError = (er) => {
+    console.log(er);
+  };
 
   const changeKarma = (score) => setData((prev) => ({ ...prev, karma: score }));
 
@@ -95,7 +113,7 @@ const Profile = () => {
         console.log(e);
         setError(e.message || "Something went wrong!");
       });
-  }, [params.id]);
+  }, [params.id, mount]);
 
   if (error) return <Error error={error} />;
 
@@ -153,10 +171,100 @@ const Profile = () => {
               <CircularProgress sx={{ p: theme.spacing(5) }} />
             )}
           </Card>
+          {user && user._id !== data._id && (
+            <Card sx={{ mb: 2 }}>
+              <CardContent>
+                {user && user._id ? (
+                  data.friends.find((u) => u._id === user._id) ? (
+                    <Box>
+                      <Chip label="Friend" color="success" />
+                    </Box>
+                  ) : data.sent.find((u) => u._id === user._id) ? (
+                    <>
+                      <Chip label="Pending" color="warning" />
+                      <Request
+                        user={data}
+                        changeMount={changeMount}
+                        setError={handleError}
+                      />
+                    </>
+                  ) : data.received.find((u) => u._id === user._id) ? (
+                    <Chip label="Pending" color="warning" />
+                  ) : (
+                    <Button>Add Friend</Button>
+                  )
+                ) : (
+                  <Typography>Please Login!</Typography>
+                )}
+              </CardContent>
+            </Card>
+          )}
           <Card>
             <CardContent>
               <Grid container>
-                <Grid item xs={12}>
+                <Tabs value={tab} onChange={changeTab}>
+                  <Tab label="Friends" />
+                  {user && user._id === data._id && <Tab label="Sent" />}
+                  {user && user._id === data._id && <Tab label="Requests" />}
+                </Tabs>
+                <UserList type="friend" value={tab} index={0} data={data}>
+                  <List>
+                    {data.friends && data.friends.length !== 0 ? (
+                      data.friends.map((f, i) => (
+                        <UserCard
+                          key={i}
+                          user={f}
+                          type="friend"
+                          changeMount={changeMount}
+                        />
+                      ))
+                    ) : (
+                      <Typography>No Friends!</Typography>
+                    )}
+                  </List>
+                </UserList>
+                {user && user._id === data._id && (
+                  <UserList type="pending" value={tab} index={1} data={data}>
+                    <List>
+                      {data.sent && data.sent.length !== 0 ? (
+                        data.sent.map((f, i) => (
+                          <UserCard
+                            key={i}
+                            user={f}
+                            type="pending"
+                            changeMount={changeMount}
+                          />
+                        ))
+                      ) : (
+                        <Typography>No Sent!</Typography>
+                      )}
+                    </List>
+                  </UserList>
+                )}
+                {user && user._id === data._id && (
+                  <UserList type="request" value={tab} index={2} data={data}>
+                    <List>
+                      {data.received && data.received.length !== 0 ? (
+                        data.received.map((f, i) => (
+                          <UserCard
+                            key={i}
+                            user={f}
+                            type="request"
+                            changeMount={changeMount}
+                          />
+                        ))
+                      ) : (
+                        <Typography>No Requests!</Typography>
+                      )}
+                    </List>
+                  </UserList>
+                )}
+                {/* <Grid
+                  item
+                  xs={12}
+                  sx={{ display: "flex", alignItems: "center" }}
+                >
+                  <GroupIcon sx={{ mr: 1 }} />
                   <Typography variant="h6">Friends</Typography>
                 </Grid>
                 <Grid
@@ -183,7 +291,7 @@ const Profile = () => {
                   ) : (
                     <CircularProgress sx={{ p: theme.spacing(5) }} />
                   )}
-                </Grid>
+                </Grid> */}
               </Grid>
             </CardContent>
           </Card>

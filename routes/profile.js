@@ -64,7 +64,7 @@ router.post("/:id", async (req, res) => {
     const id = req.params.id;
     const user = await User.findById(id)
       .select("-password")
-      .populate("friends", "name avatar");
+      .populate({ path: "friends received sent", select: "name avatar karma" });
     if (!user) return errorHander.handleNotFound(res, "User Not Found");
     res.status(200).json({ user });
   } catch (error) {
