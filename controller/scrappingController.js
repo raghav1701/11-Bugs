@@ -2,9 +2,6 @@ const cheerio = require("cheerio");
 const pretty = require("pretty");
 const router = require("express").Router();
 const axios = require("axios");
-const scoreController = require("./scoreController");
-const errorHandler = require("../handler/error");
-const User = require("../models/User");
 
 const htmlparser = async (url) => {
   const { data } = await axios.get(url);
@@ -59,10 +56,7 @@ exports.gh_scrapping = async (req, res) => {
     });
 
     const yearly_contributions = $(".js-yearly-contributions h2");
-    const contributions = $(yearly_contributions)
-      .text()
-      .match(/\d+/g)[0]
-      .trim();
+    console.log($(yearly_contributions).text().match(/\d+/g)[0].trim());
     // console.log(pinned_repos);
 
     let star = 0;
@@ -90,27 +84,18 @@ exports.gh_scrapping = async (req, res) => {
     // console.log(repos);
     // console.log(commits);
 
-    const score = scoreController.calculateGithub({
-      star,
-      repos,
-      commits,
-      contributions,
-    });
-
     // res.json({ pinned_repos, star, repos, commits });
     res.json({
       stats: [
         { value: star, label: "Star" },
         { value: repos, label: "Repository Count" },
         { value: commits, label: "Total Commits" },
-        { value: contributions, label: "Cntributions" },
       ],
       other: { value: pinned_repos, label: "Pinned Repositories" },
-      score,
     });
   } catch (e) {
     console.log(e);
-    errorHandler.handleInternalServer(res);
+    throw new Error(e);
   }
 };
 
@@ -158,9 +143,7 @@ exports.cc_scrapping = async (req, res) => {
     // console.log(fully_partially_content.text().match(/\d+/g));
     // console.log(fully_solved);
     // console.log(partially_solved);
-    const score = scoreController.calculateCodeChef({ rating: max_rating });
     res.json({
-      score,
       stats: [
         { value: stars, label: "Stars" },
         { value: max_rating, label: "Maximum Rating" },
@@ -172,7 +155,7 @@ exports.cc_scrapping = async (req, res) => {
     });
   } catch (e) {
     console.log(e);
-    errorHandler.handleInternalServer(res);
+    throw new Error(e);
   }
 };
 
@@ -216,31 +199,20 @@ exports.cf_scrapping = async (req, res) => {
 
     footer.find("._UserActivityFrame_counter").each((i, elem) => {
       if (i == 0) {
-        all_time = $(elem)
-          .find("._UserActivityFrame_counterValue")
-          .text()
-          .match(/\d+/g)[0];
+        all_time = $(elem).find("._UserActivityFrame_counterValue").text();
       }
       if (i == 1) {
-        last_year = $(elem)
-          .find("._UserActivityFrame_counterValue")
-          .text()
-          .match(/\d+/g)[0];
+        last_year = $(elem).find("._UserActivityFrame_counterValue").text();
       }
       if (i == 2) {
-        last_month = $(elem)
-          .find("._UserActivityFrame_counterValue")
-          .text()
-          .match(/\d+/g)[0];
+        last_month = $(elem).find("._UserActivityFrame_counterValue").text();
       }
     });
 
     // console.log(all_time);
     // console.log(last_year);
     // console.log(last_month);
-    const score = scoreController.calculateCodeForces({ rating: curr_rating });
     res.json({
-      score,
       stats: [
         { value: rank.trim(), label: "Rank" },
         { value: curr_rating, label: "Current Rating" },
@@ -253,6 +225,6 @@ exports.cf_scrapping = async (req, res) => {
     });
   } catch (e) {
     console.log(e);
-    errorHandler.handleInternalServer(res);
+    throw new Error(e);
   }
 };

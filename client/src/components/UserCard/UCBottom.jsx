@@ -22,16 +22,17 @@ const useStyle = makeStyles((theme) => ({
 const UCBottom = (props) => {
   const classes = useStyle();
 
+
   return (
     <Grid item container xs={12}>
       <Grid item container xs={12} md={4} className={classes.cpBox}>
-        <CCCard />
+        <CCCard handle={props.handle.codechef} />
       </Grid>
       <Grid item container xs={12} md={4} className={classes.cpBox}>
-        <CCCard />
+        <GHCard handle={props.handle.github} />
       </Grid>
       <Grid item container xs={12} md={4} className={classes.cpBox}>
-        <CFCard />
+        <CFCard handle={props.handle.codeforces} />
       </Grid>
     </Grid>
   );
