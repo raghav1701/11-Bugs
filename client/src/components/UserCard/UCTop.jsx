@@ -12,7 +12,7 @@ import Button from "@mui/material/Button";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import Card from "@mui/material/Card";
-import { Box, CircularProgress, IconButton } from "@mui/material";
+import { Box, CircularProgress, IconButton, Link } from "@mui/material";
 
 import axios from "axios";
 import { useTheme } from "@mui/material";
@@ -21,10 +21,13 @@ import Paper from "@mui/material/Paper";
 //icons
 import ArrowCircleUpIcon from "@mui/icons-material/ArrowCircleUp";
 import ArrowCircleDownIcon from "@mui/icons-material/ArrowCircleDown";
+import ThumbUpAltOutlinedIcon from "@mui/icons-material/ThumbUpAltOutlined";
+import ThumbDownOutlinedIcon from "@mui/icons-material/ThumbDownOutlined";
 import ShareIcon from "@mui/icons-material/Share";
 import { UserContext } from "../../contexts/UserContext";
 
 import Modal from "@mui/material/Modal";
+import ScoreCard from "../Misc/ScoreCard";
 
 const style = {
   position: "absolute",
@@ -39,13 +42,13 @@ const style = {
 };
 
 const useStyles = makeStyles((theme) => ({
-  Header: {
-    display: "flex",
-    marginBottom: "5px",
-    minHeight: 100,
-    justifyContent: "center",
-    alignItems: "center",
-  },
+  // Header: {
+  //   display: "flex",
+  //   marginBottom: "5px",
+  //   minHeight: 100,
+  //   justifyContent: "center",
+  //   alignItems: "center",
+  // },
   card: {
     padding: "10px",
     // border: `1px solid grey`,
@@ -55,14 +58,14 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "center",
     alignItems: "center",
   },
-  Avatar: {
-    width: "100px",
-    height: "100px",
-    [theme.breakpoints.down("sm")]: {
-      width: "70px",
-      height: "70px",
-    },
-  },
+  // Avatar: {
+  //   width: "100px",
+  //   height: "100px",
+  //   [theme.breakpoints.down("sm")]: {
+  //     width: "70px",
+  //     height: "70px",
+  //   },
+  // },
   UserSummary: {
     padding: "0 10px 0 0",
   },
@@ -101,7 +104,7 @@ const UCTop = (props) => {
   const theme = useTheme();
   const classes = useStyles();
   const [view, setView] = React.useState("list");
-  const [vote, setVote] = React.useState(props.data.preVote);
+  const [vote, setVote] = React.useState(props.data.preVote || 0);
   const [user, setUser] = React.useContext(UserContext);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
@@ -109,7 +112,9 @@ const UCTop = (props) => {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  const handleAlignment = (event, newVote) => {
+  const handleAlignment = (newVote) => {
+    // console.log(event.target.value);
+    // const newVote = event.target.value;
     console.log(newVote, vote);
     postVote(newVote)
       .then((res) => {
@@ -166,33 +171,118 @@ const UCTop = (props) => {
       <Grid
         item
         container
-        xs={4}
-        sm={user._id ? 2.5 : 3}
-        className={classes.profile}
+        xs={12}
+        // sm={user._id ? 2.5 : 3}
+        // className={classes.profile}
       >
+        <Grid
+          item
+          xs={6}
+          order={{ xs: 2 }}
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
+          <Avatar
+            alt="Remy Sharp"
+            src={props.data.avatar}
+            // className={classes.Avatar}
+            sx={{ width: 128, height: 128, mr: 2 }}
+          ></Avatar>
+          {/* <Grid item xs={12}> */}
+          <Box sx={{ textAlign: "center" }}>
+            <Link href={`/profile/${props.data._id}`} target="_blank">
+              <Typography align="center" variant="h6" color="text.primary">
+                {props.data.name}
+              </Typography>
+            </Link>
+            <Typography color="primary" sx={{ fontWeight: "bold" }}>
+              ({Math.round((props.data.karma + Number.EPSILON) * 100) / 100})
+            </Typography>
+            <Typography
+              align="center"
+              gutterBottom
+              variant="caption"
+              color="text.disabled"
+            >
+              {props.data.username}
+            </Typography>
+          </Box>
+        </Grid>
+        <Grid
+          item
+          xs={3}
+          order={{ xs: 1 }}
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            [theme.breakpoints.down("sm")]: { alignItems: "flex-end" },
+          }}
+        >
+          {user._id && (
+            <ToggleButton
+              onClick={() => handleAlignment(1)}
+              value={1}
+              // className={[classes.VoteButton, classes.VoteUp]}
+            >
+              <ThumbUpAltOutlinedIcon color="success" />
+            </ToggleButton>
+          )}
+        </Grid>
+        <Grid
+          item
+          xs={3}
+          order={{ xs: 3 }}
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            [theme.breakpoints.down("sm")]: { alignItems: "flex-end" },
+          }}
+        >
+          {user._id && (
+            <ToggleButton
+              onClick={() => handleAlignment(-1)}
+              value={-1}
+              // className={[classes.VoteButton, classes.VoteDown]}
+            >
+              <ThumbDownOutlinedIcon
+                sx={{ color: theme.palette.error.light }}
+              />
+            </ToggleButton>
+          )}
+        </Grid>
+        {/* {user._id && (
+        <Grid item container xs={12} sm={4} className={classes.vote}>
+          <ToggleButtonGroup
+            orientation="vertical"
+            value={vote}
+            exclusive
+            onChange={handleAlignment}
+            className={classes.vote}
+          >
+
+            <Typography
+              sx={{ padding: "1px" }}
+              className={[classes.VoteButton]}
+            >
+              up vote or down vote this developer
+            </Typography>
+
+          </ToggleButtonGroup>
+        </Grid>
+      )} */}
         {/* avator left */}
 
-        <Avatar
-          alt="Remy Sharp"
-          src={props.data.avatar}
-          className={classes.Avatar}
-          sx={{ boxShadow: "0 0 12px #fff" }}
-        ></Avatar>
+        {/* </Grid> */}
         {/* top left right */}
       </Grid>
-      <Grid item container xs={8} sm={user._id ? 5.5 : 9}>
-        <Grid item container sm={12} className={classes.UserSummary}>
-          <Grid item xs={12}>
-            <Typography
-              gutterBottom
-              variant="h6"
-              component="div"
-              color="text.primary"
-            >
-              {props.data.name}
-            </Typography>
-          </Grid>
-          <Grid item xs={12}>
+      {/* <Grid item container xs={8} sm={user._id ? 5.5 : 9}> */}
+      {/* <Grid item container sm={12} className={classes.UserSummary}> */}
+      {/* <Grid item xs={12}>
             <Typography
               gutterBottom
               variant="h6"
@@ -201,8 +291,8 @@ const UCTop = (props) => {
             >
               {props.data.karma}
             </Typography>
-          </Grid>
-          {/* <ThemeProvider theme={theme}>
+          </Grid> */}
+      {/* <ThemeProvider theme={theme}>
             <Grid item xs={3} className={classes.CardVal}>
               <Card className={classes.Val} elevation={2} sm={3}>
                 <Typography
@@ -264,41 +354,11 @@ const UCTop = (props) => {
               </Card>
             </Grid>
           </ThemeProvider> */}
-          {/* <IconButton size="small">
+      {/* <IconButton size="small">
             <ShareIcon color="primary" />
           </IconButton> */}
-        </Grid>
-      </Grid>
-      {user._id && (
-        <Grid item container xs={12} sm={4} className={classes.vote}>
-          <ToggleButtonGroup
-            orientation="vertical"
-            value={vote}
-            exclusive
-            onChange={handleAlignment}
-            className={classes.vote}
-          >
-            <ToggleButton
-              value={1}
-              // className={[classes.VoteButton, classes.VoteUp]}
-            >
-              <ArrowCircleUpIcon color="success" />
-            </ToggleButton>
-            <Typography
-              sx={{ padding: "1px" }}
-              className={[classes.VoteButton]}
-            >
-              up vote or down vote this developer
-            </Typography>
-            <ToggleButton
-              value={-1}
-              // className={[classes.VoteButton, classes.VoteDown]}
-            >
-              <ArrowCircleDownIcon color="error" />
-            </ToggleButton>
-          </ToggleButtonGroup>
-        </Grid>
-      )}
+      {/* </Grid> */}
+      {/* </Grid> */}
     </Grid>
   );
 };

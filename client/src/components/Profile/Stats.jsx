@@ -18,6 +18,8 @@ import UsernameDialog from "./UsernameDialog";
 import axios from "axios";
 import Repos from "./Repos";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
+import CodeChef from "../Misc/CodeChef";
+import CodeForces from "../Misc/CodeForces";
 
 const Stats = (props) => {
   const {
@@ -97,7 +99,9 @@ const Stats = (props) => {
       >
         <Grid container alignItems="center" sx={{ width: "100%", mb: 2 }}>
           <Grid item sx={{ px: 1 }}>
-            <GitHubIcon />
+            {code === "Github" ? <GitHubIcon /> : null}
+            {code === "Codechef" ? <CodeChef /> : null}
+            {code === "Codeforces" ? <CodeForces /> : null}
           </Grid>
           <Grid item sx={{ px: 1 }} xs={handle ? "" : true}>
             <Typography variant="h5">{code} Stats</Typography>

@@ -64,6 +64,60 @@ router.post("/recommend/no-auth", async (req, res) => {
   }
 });
 
+router.post(
+  "/recommend/auth",
+  authController.isAuthenticated,
+  async (req, res) => {
+    try {
+      const page = Math.max(0, req.query.page || 0);
+      const docsPerPage = 10;
+
+      // Sort the users by difference between current karma and user karma
+      const pipe = User.aggregate([
+        {
+          $match: { _id: { $nin: [req.user._id] } },
+        },
+        {
+          $project: {
+            karma: 1,
+            name: 1,
+            username: 1,
+            email: 1,
+            handles: 1,
+            avatar: 1,
+            diff: {
+              $abs: { $subtract: ["$karma", req.user.karma] },
+            },
+          },
+        },
+        {
+          $sort: {
+            diff: 1,
+          },
+        },
+        { $skip: page * docsPerPage },
+        { $limit: docsPerPage },
+      ]);
+
+      let results = await pipe.exec();
+      // if (results.length !== 0) {
+      //   results = await Promise.all(
+      //     results.map((r) => {
+      //       return User.findById(r._id).select(
+      //         "-password -review -friends -sent -received"
+      //       );
+      //     })
+      //   );
+      // }
+
+      res.status(200).json({ results });
+    } catch (e) {
+      console.log(e);
+      errorHandler.handleInternalServer(res);
+    }
+  }
+);
+
 //Return the leaderboard
 router.post("/leaderboard/global", async (req, res) => {
   try {
@@ -82,7 +136,7 @@ router.post("/leaderboard/global", async (req, res) => {
         $project: {
           karma: 1,
           rank: 1,
-          name: 1,
+          username: 1,
         },
       },
     ]);
@@ -115,7 +169,7 @@ router.post(
           $project: {
             karma: 1,
             rank: 1,
-            name: 1,
+            username: 1,
           },
         },
       ]);

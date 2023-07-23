@@ -5,6 +5,7 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
+import TablePagination from "@mui/material/TablePagination";
 import Paper from "@mui/material/Paper";
 import { makeStyles } from "@mui/styles";
 import {
@@ -20,8 +21,7 @@ import Err from "../Misc/Err";
 
 const useStyles = makeStyles((theme) => ({
   tableContainer: {
-    borderRadius: 15,
-    margin: "50px 0",
+    // borderRadius: 15,
   },
   tableHeaderCell: {
     fontWeight: "bold",
@@ -38,69 +38,97 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const LeaderBoard = () => {
+const LeaderBoard = (props) => {
   const classes = useStyles();
   const [data, setData] = useState([]);
   const [error, setError] = useState("");
+  const [page, setPage] = useState(0);
+  const { type } = props;
+  const [rowsperpage, setRowsperpage] = useState(3);
   const theme = useTheme();
-  useEffect(async () => {
+
+  const handleChangeRowsPerPage = (e) => {
+    setRowsperpage(parseInt(e.target.value, 10));
+    setPage(0);
+  };
+
+  const handleChangePage = (e, p) => {
+    setPage(p);
+  };
+
+  const fetchData = async () => {
     try {
-      const res = await axios.post("/leaderboard/global");
+      const res = await axios.post(`/leaderboard/${type}`);
       console.log(res.data.result);
       setData(res.data.result);
     } catch (e) {
       setError(e.message);
       console.log(e);
     }
-  }, []);
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, [type]);
   if (error) return <Err error={error} />;
   return (
-    <TableContainer component={Paper} className={classes.tableContainer}>
-      <Table sx={{ minWidth: 650 }} aria-label="simple table">
+    <TableContainer className={classes.tableContainer} sx={{ py: 2 }}>
+      <Table
+        aria-label="simple table"
+        sx={{ backgroundColor: theme.palette.background.paper }}
+      >
         <TableHead>
           <TableRow>
             <TableCell className={classes.tableHeaderCell}>Rank</TableCell>
-            <TableCell className={classes.tableHeaderCell}>Name</TableCell>
+            <TableCell className={classes.tableHeaderCell}>Username</TableCell>
             <TableCell className={classes.tableHeaderCell}>Score</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {data.map((row, i) => (
-            <>
-              <TableRow
-                key={i}
-                sx={{
-                  "&:last-child td, &:last-child th": {
-                    border: 0,
-                  },
-                }}
-              >
-                <TableCell
-                  sx={{ borderBottom: `1px solid ${theme.palette.divider}` }}
+          {data
+            .slice(page * rowsperpage, page * rowsperpage + rowsperpage)
+            .map((row, i) => (
+              <>
+                <TableRow
+                  key={i}
+                  sx={{
+                    "&:last-child td, &:last-child th": {
+                      border: 0,
+                    },
+                  }}
                 >
-                  <Grid container>
-                    <Typography>{row.rank}</Typography>
-                  </Grid>
-                </TableCell>
-                <TableCell
-                  sx={{ borderBottom: `1px solid ${theme.palette.divider}` }}
-                >
-                  <Link href={`/profile/${row._id}`}>
-                    <Typography className={classes.name}>{row.name}</Typography>
-                  </Link>
-                </TableCell>
-                <TableCell
-                  sx={{ borderBottom: `1px solid ${theme.palette.divider}` }}
-                >
-                  <Typography>
-                    {Math.round((row.karma + Number.EPSILON) * 100) / 100}
-                  </Typography>
-                </TableCell>
-              </TableRow>
-            </>
-          ))}
+                  <TableCell>
+                    <Grid container>
+                      <Typography>{row.rank}</Typography>
+                    </Grid>
+                  </TableCell>
+                  <TableCell>
+                    <Link href={`/profile/${row._id}`}>
+                      <Typography className={classes.name}>
+                        {row.username}
+                      </Typography>
+                    </Link>
+                  </TableCell>
+                  <TableCell>
+                    <Typography>
+                      {Math.round((row.karma + Number.EPSILON) * 100) / 100}
+                    </Typography>
+                  </TableCell>
+                </TableRow>
+              </>
+            ))}
         </TableBody>
       </Table>
+      <TablePagination
+        component={"div"}
+        rowsPerPageOptions={[3]}
+        colSpan={3}
+        count={data.length}
+        rowsPerPage={rowsperpage}
+        page={page}
+        onPageChange={handleChangePage}
+        onRowsPerPageChange={handleChangeRowsPerPage}
+      />
     </TableContainer>
   );
 };

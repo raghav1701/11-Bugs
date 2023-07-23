@@ -12,12 +12,14 @@ import {
 } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import axios from "axios";
 import Request from "./Request";
+import { UserContext } from "../../contexts/UserContext";
 
 const UserCard = (props) => {
   const { type } = props;
+  const [user] = useContext(UserContext);
   const navigate = useNavigate();
   const [error, setError] = useState("");
 
@@ -45,7 +47,7 @@ const UserCard = (props) => {
           </ListItemIcon>
           <ListItemText primary={props.user.name} />
         </ListItemButton>
-        {type === "friend" && (
+        {type === "friend" && props.user._id !== user._id && (
           <Box>
             <Tooltip title="Remove">
               <IconButton onClick={removeFriend}>

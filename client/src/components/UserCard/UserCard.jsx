@@ -11,7 +11,12 @@ import UCBottom from "./UCBottom";
 
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import Button from "@mui/material/Button";
-import { CircularProgress, IconButton } from "@mui/material";
+import {
+  CircularProgress,
+  Dialog,
+  DialogContent,
+  IconButton,
+} from "@mui/material";
 import { useTheme } from "@mui/material";
 
 import axios from "axios";
@@ -42,14 +47,14 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "center",
     // border: "1px solid #D1D1D1",
     // borderRadius: "4px",
-    boxShadow: "2px 2px 5px #00000016",
-    padding: "10px",
-    margin: "50px",
+    // boxShadow: "2px 2px 5px #00000016",
+    // padding: "10px",
+    // margin: "50px",
     [theme.breakpoints.down("sm")]: {
-      margin: "20px",
+      // margin: "20px",
     },
     [theme.breakpoints.down("xs")]: {
-      margin: "5px",
+      // margin: "5px",
     },
     width: "100%",
     maxWidth: 700,
@@ -177,69 +182,60 @@ const UserCard = (props) => {
   };
 
   return (
-    <Card className={classes.CARD}>
-      {end.title && (
-        <Modal
-          open={open}
-          onClose={handleClose}
-          aria-labelledby="modal-modal-title"
-          aria-describedby="modal-modal-description"
-        >
-          <Box sx={style}>
-            <Typography id="modal-modal-title" variant="h6" component="h2">
-              {end.title}
-            </Typography>
-            <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-              {end.description}
-            </Typography>
-          </Box>
-        </Modal>
+    <Card className={classes.CARD} sx={{ p: 3 }}>
+      {end.title ? (
+        <Typography color={theme.palette.warning.main} align="center">
+          You have reached the end!
+        </Typography>
+      ) : (
+        <>
+          <Grid container>
+            {/* top */}
+
+            {!loading ? (
+              <Grid item container xs={12} md={12}>
+                <UCTop data={{ ...data, preVote: preVote }} />
+              </Grid>
+            ) : (
+              <Grid
+                item
+                className={classes.LoaderGridTop}
+                container
+                xs={12}
+                md={12}
+              >
+                <CircularProgress
+                  sx={{ p: theme.spacing(1), color: theme.palette.divider }}
+                />
+              </Grid>
+            )}
+            {/* bottom */}
+
+            {!loading ? (
+              <Grid item container xs={12} md={12}>
+                <UCBottom Overloading={loading} handle={data.handles} />
+              </Grid>
+            ) : (
+              <Grid
+                item
+                className={classes.LoaderGridBottom}
+                container
+                xs={12}
+                md={12}
+              >
+                <CircularProgress
+                  sx={{ p: theme.spacing(1), color: theme.palette.divider }}
+                />
+              </Grid>
+            )}
+          </Grid>
+
+          <Button className={classes.NextButton} onClick={handlePageChange}>
+            <NavigateNextIcon />
+            {/* won't work on loading */}
+          </Button>
+        </>
       )}
-
-      <Grid container>
-        {/* top */}
-
-        {!loading ? (
-          <Grid item container xs={12} md={12}>
-            <UCTop data={{ ...data, preVote: preVote }} />
-          </Grid>
-        ) : (
-          <Grid
-            item
-            className={classes.LoaderGridTop}
-            container
-            xs={12}
-            md={12}
-          >
-            <CircularProgress
-              sx={{ p: theme.spacing(1), color: theme.palette.divider }}
-            />
-          </Grid>
-        )}
-        {/* bottom */}
-
-        {!loading ? (
-          <Grid item container xs={12} md={12}>
-            <UCBottom Overloading={loading} handle={data.handles} />
-          </Grid>
-        ) : (
-          <Grid
-            item
-            className={classes.LoaderGridBottom}
-            container
-            xs={12}
-            md={12}
-          >
-            <CircularProgress
-              sx={{ p: theme.spacing(1), color: theme.palette.divider }}
-            />
-          </Grid>
-        )}
-      </Grid>
-      <Button className={classes.NextButton} onClick={handlePageChange}>
-        <NavigateNextIcon />
-        {/* won't work on loading */}
-      </Button>
     </Card>
   );
 };

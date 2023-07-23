@@ -161,7 +161,7 @@ const Profile = () => {
                     </Grid>
                     <Grid item xs={true} alignSelf="center" align="center">
                       <Typography variant="h6">{data.name}</Typography>
-                      <Typography variant="h6">{data.username}</Typography>
+                      <Typography variant="caption">{data.username}</Typography>
                       {data.resume && (
                         <Link href={data.resume}>
                           <Button startIcon={<LinkIcon />}>Resume</Button>
