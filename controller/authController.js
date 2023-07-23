@@ -71,7 +71,12 @@ exports.isAuthenticated = async (req, res, next) => {
 
 exports.signup = async (req, res) => {
   try {
-    if (!req.body.name || !req.body.email || !req.body.password) {
+    if (
+      !req.body.name ||
+      !req.body.email ||
+      !req.body.username ||
+      !req.body.password
+    ) {
       errorHander.handleBadRequest(res);
       // res.status(400).send({ message: "All fields is required" });
       return;
@@ -89,6 +94,10 @@ exports.signup = async (req, res) => {
     //Check if User is Already Exists
     const isUser = await userExists(req.body.email);
     if (isUser) return errorHander.handleConflict(res, "Email already in use.");
+
+    const userName = await User.findOne({ username: req.body.username });
+    if (userName)
+      return errorHander.handleConflict(res, "Username already in use.");
     // return res
     //   .status(409)
     //   .send({ message: "User Already Exist. Please Login" });
@@ -97,6 +106,7 @@ exports.signup = async (req, res) => {
     const newUser = new User({
       name: req.body.name,
       email: req.body.email,
+      username: req.body.username,
       password: await encryptPassword(req.body.password),
     });
     await newUser.save();

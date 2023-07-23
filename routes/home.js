@@ -3,7 +3,7 @@ const authController = require("../controller/authController");
 const errorHandler = require("../handler/error");
 const User = require("../models/User");
 
-router.get("/recommend/no-auth", async (req, res) => {
+router.post("/recommend/no-auth", async (req, res) => {
   try {
     const page = Math.max(0, req.query.page || 0);
     const docsPerPage = 1;

@@ -14,10 +14,12 @@ import { makeStyles } from "@mui/styles";
 import { ThemeChangeContext } from "../../contexts/ThemeChangeContext";
 import { alpha } from "@mui/material/styles";
 import BugReportIcon from "@mui/icons-material/BugReport";
+import SearchIcon from "@mui/icons-material/Search";
+import { useNavigate } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   options: {
-    margin: theme.spacing(1),
+    margin: theme.spacing(0.5),
   },
   svg: {
     fill: theme.palette.text.primary,
@@ -33,12 +35,17 @@ const EmptySpace = styled("div")(({ theme }) => ({
 const Navbar = (props) => {
   const theme = useTheme();
   const classes = useStyles();
+  const navigate = useNavigate();
   const [mode, changeMode] = React.useContext(ThemeChangeContext);
   const [user, setUser] = React.useContext(UserContext);
   const [profilePop, setProfilePop] = React.useState({
     open: false,
     anchor: null,
   });
+
+  const goToSearch = () => {
+    navigate("/search");
+  };
 
   const handleProfilePopOpen = (event) => {
     setProfilePop({ open: true, anchor: event.currentTarget });
@@ -73,6 +80,11 @@ const Navbar = (props) => {
           <BugReportIcon sx={{ fontSize: 32 }} />
         </Link>
         <EmptySpace />
+        <Tooltip title="Search" className={classes.options}>
+          <IconButton onClick={goToSearch}>
+            <SearchIcon />
+          </IconButton>
+        </Tooltip>
         <Tooltip title="Change Theme" className={classes.options}>
           <IconButton onClick={changeMode}>
             <Brightness4Icon />

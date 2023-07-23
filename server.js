@@ -9,6 +9,7 @@ const home = require("./routes/home");
 const auth = require("./routes/auth");
 const profile = require("./routes/profile");
 const scrap = require("./routes/scrap");
+const search = require("./routes/search");
 const friends = require("./routes/friends");
 
 // PORT
@@ -27,7 +28,7 @@ app.use(express.static(path.resolve(__dirname, "./client/build")));
 app.use("/", home);
 app.use("/profile", profile);
 app.use("/auth", auth);
-
+app.use("/search", search);
 app.use("/scrap", scrap);
 
 app.use("/friends", friends);

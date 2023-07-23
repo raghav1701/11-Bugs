@@ -11,6 +11,7 @@ import Login from "./Auth/Login";
 import { grey } from "@mui/material/colors";
 import Navbar from "./Navbar/Navbar";
 import Signup from "./Auth/SignUp";
+import Search from "./Search/Search";
 import LeaderBoard from "./LeaderBoard/LeaderBoard";
 
 const MainComponent = () => {
@@ -19,7 +20,7 @@ const MainComponent = () => {
   const navigate = useNavigate();
   const fetchUser = async () => {
     try {
-      let res = await fetch("/auth/user");
+      let res = await fetch("/auth/user", { method: "POST" });
       let status = res.status;
       res = await res.json();
       if (status === 200) {
@@ -56,8 +57,8 @@ const MainComponent = () => {
     palette: {
       mode: mode,
       background: {
-        paper: mode === "light" ? grey[300] : grey[800],
-        default: mode === "light" ? grey[100] : grey[900],
+        paper: mode === "light" ? grey[100] : grey[800],
+        default: mode === "light" ? grey[300] : grey[900],
       },
     },
   });
@@ -108,6 +109,7 @@ const MainComponent = () => {
           <Route path="/auth" element={<Auth />} />
           <Route path="/auth/signin" element={<Login />} />
           <Route path="/auth/signup" element={<Signup />} />
+          <Route path="/search" element={<Search />} />
         </Routes>
       </Container>
     </ThemeProvider>

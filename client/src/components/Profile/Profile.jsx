@@ -27,7 +27,7 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import UserCard from "../Misc/UserCard";
 import Stats from "./Stats";
-import Error from "../Misc/Error";
+import Err from "../Misc/Err";
 import { UserContext } from "../../contexts/UserContext";
 import Edit from "@mui/icons-material/Edit";
 import EditProfileDialog from "./EditProfileDialog";
@@ -50,6 +50,7 @@ const Profile = () => {
   const [data, setData] = useState({
     email: "",
     name: "",
+    username: "",
     karma: 0,
     scores: { github: 0, codechef: 0, codeforces: 0 },
     handles: { github: "", codechef: "", codeforces: "" },
@@ -91,6 +92,30 @@ const Profile = () => {
     }
   };
 
+  const updateScore = async (score, code, userID) => {
+    try {
+      const res = await axios.patch("/profile/score", {
+        code: code.toLowerCase(),
+        score,
+        userID,
+      });
+      changeKarma(res.data.karma);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const addFriend = async () => {
+    try {
+      const res = await axios.post("/friends/request", {
+        userID: data._id,
+      });
+      changeMount();
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   // Testing friends
   const getFriends = () => {
     let friends = [];
@@ -115,11 +140,11 @@ const Profile = () => {
       });
   }, [params.id, mount]);
 
-  if (error) return <Error error={error} />;
+  if (error) return <Err error={error} />;
 
   return (
     <Grid container sx={{ py: theme.spacing(2) }}>
-      <Grid container item xs={12} sm={6} md={4}>
+      <Grid container item xs={12} md={4}>
         <Grid item xs={12} className={classes.cards}>
           <Card sx={{ display: "flex", justifyContent: "center", mb: 2 }}>
             {!loading ? (
@@ -136,6 +161,7 @@ const Profile = () => {
                     </Grid>
                     <Grid item xs={true} alignSelf="center" align="center">
                       <Typography variant="h6">{data.name}</Typography>
+                      <Typography variant="h6">{data.username}</Typography>
                       {data.resume && (
                         <Link href={data.resume}>
                           <Button startIcon={<LinkIcon />}>Resume</Button>
@@ -191,7 +217,9 @@ const Profile = () => {
                   ) : data.received.find((u) => u._id === user._id) ? (
                     <Chip label="Pending" color="warning" />
                   ) : (
-                    <Button>Add Friend</Button>
+                    <Button variant="contained" onClick={addFriend}>
+                      Add Friend
+                    </Button>
                   )
                 ) : (
                   <Typography>Please Login!</Typography>
@@ -300,28 +328,31 @@ const Profile = () => {
       <Grid container item xs={true}>
         <Grid item sx={{ width: "100%" }} className={classes.cards}>
           <Stats
-            score={data.scores.github}
+            // score={data.scores.github}
             handle={data.handles.github}
             code={"Github"}
             editable={user._id === data._id}
             userID={data._id}
             changeKarma={changeKarma}
+            updateScore={updateScore}
           />
           <Stats
-            score={data.scores.codeforces}
+            // score={data.scores.codeforces}
             handle={data.handles.codeforces}
             code={"Codeforces"}
             editable={user._id === data._id}
             userID={data._id}
             changeKarma={changeKarma}
+            updateScore={updateScore}
           />
           <Stats
-            score={data.scores.codechef}
+            // score={data.scores.codechef}
             handle={data.handles.codechef}
             code={"Codechef"}
             editable={user._id === data._id}
             userID={data._id}
             changeKarma={changeKarma}
+            updateScore={updateScore}
           />
         </Grid>
       </Grid>

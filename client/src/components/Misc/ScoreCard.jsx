@@ -20,7 +20,7 @@ const ScoreCard = (props) => {
           sx={{
             fontSize: sz,
             transform: "rotate(-90deg)",
-            transition: "all 1s ease-in-out",
+            transition: "1s ease",
           }}
         >
           <circle
@@ -46,6 +46,7 @@ const ScoreCard = (props) => {
             stroke={getColor(val)}
             strokeDasharray={val + " " + circum}
             strokeLinecap="round"
+            style={{ transition: "1s ease" }}
           />
         </SvgIcon>
         <Box

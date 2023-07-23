@@ -18,10 +18,10 @@ router.get("/", authController.isAuthenticated, async (req, res) => {
 // Create friend request
 router.post("/request", authController.isAuthenticated, async (req, res) => {
   try {
-    if (req.body.email === req.user.email)
+    if (req.body.userID === req.user._id)
       return errorHandler.handleBadRequest(res);
 
-    const user = await User.findOne({ email: req.body.email });
+    const user = await User.findById(req.body.userID);
     if (!user) return errorHandler.handleBadRequest(res, "User not found!");
 
     const already = user.friends.find((u) => u.equals(req.user._id));

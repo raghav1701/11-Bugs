@@ -20,7 +20,14 @@ import Repos from "./Repos";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 
 const Stats = (props) => {
-  const { handle, code, editable, userID, changeKarma } = props;
+  const {
+    handle,
+    code,
+    editable = false,
+    userID,
+    changeKarma = null,
+    scoreSize = 72,
+  } = props;
   const [stats, setStats] = useState([]);
   const [repos, setRepos] = useState([]);
   const [score, setScore] = useState(0);
@@ -37,7 +44,7 @@ const Stats = (props) => {
       const res = await axios.post(`/scrap/${code.toLowerCase()}/${handle}`);
       return res.data;
     } catch (e) {
-      setError(e.message || "Something went wrong!");
+      setError("Could not load the user stats!");
     }
   };
   // const fetchCodeforcesStats = async () => {};
@@ -53,16 +60,7 @@ const Stats = (props) => {
   };
 
   const updateScore = async (score) => {
-    try {
-      const res = await axios.patch("/profile/score", {
-        code: code.toLowerCase(),
-        score,
-        userID,
-      });
-      changeKarma(res.data.karma);
-    } catch (e) {
-      console.log(e);
-    }
+    if (props.updateScore) props.updateScore(score, code, userID);
   };
 
   useEffect(() => {
@@ -78,13 +76,13 @@ const Stats = (props) => {
         if (code === "Github") {
           setRepos(res.other.value);
         }
-        setStats(res.stats);
+        setStats([{ label: "Username", value: handle }, ...res.stats]);
         setScore(res.score);
         updateScore(res.score);
         setLoading(false);
       })
       .catch((e) => {
-        setError(e.message);
+        setError("Could not load the user stats!");
         setLoading(false);
       });
   }, [code, handle]);
@@ -124,8 +122,8 @@ const Stats = (props) => {
         <Divider sx={{ marginBottom: 2 }} />
         {!error ? (
           !loading ? (
-            <Grid container sx={{ width: "100%" }}>
-              <Grid item xs={true}>
+            <Grid container justifyContent="center" sx={{ width: "100%" }}>
+              <Grid item xs={12} sm={true} sx={{ px: 1 }}>
                 <Box>
                   {stats &&
                     stats.map((s, i) => (
@@ -134,8 +132,8 @@ const Stats = (props) => {
                         sx={{
                           display: "flex",
                           width: "100%",
-                          maxWidth: 250,
-                          px: 1,
+                          maxWidth: 500,
+                          // pl: 1,
                         }}
                       >
                         <Typography sx={{ mr: "auto" }} color="text.disabled">
@@ -149,7 +147,7 @@ const Stats = (props) => {
                 </Box>
               </Grid>
               <Grid item>
-                <ScoreCard value={score} size={72} />
+                <ScoreCard value={score} size={scoreSize} />
               </Grid>
               {code === "Github" && (
                 <Grid item xs={12}>

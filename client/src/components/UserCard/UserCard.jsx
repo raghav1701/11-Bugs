@@ -94,7 +94,7 @@ const UserCard = (props) => {
     title: "",
     description: "",
   });
-  const [preVote, setPreVote] = useState('')
+  const [preVote, setPreVote] = useState("");
 
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
@@ -104,7 +104,7 @@ const UserCard = (props) => {
     try {
       setError("");
       setLoading(true);
-      let res = await axios.get(`/recommend/no-auth?page=${counter}`);
+      let res = await axios.post(`/recommend/no-auth?page=${counter}`);
       setLoading(false);
       console.log(res.data.results[0]);
       return res.data.results[0];
@@ -115,13 +115,14 @@ const UserCard = (props) => {
     }
   };
 
-  const fetchUserProfileById = async (id) => { ////////////////////
+  const fetchUserProfileById = async (id) => {
+    ////////////////////
     try {
       setError("");
       setLoading(true);
       let res = await axios.post(`/profile/${id}`);
       setLoading(false);
-      console.log(res)
+      console.log(res);
       return res.data.user;
     } catch (e) {
       console.log(e);
@@ -150,7 +151,7 @@ const UserCard = (props) => {
   }, [counter]);
 
   React.useEffect(() => {
-    console.log(data._id)
+    console.log(data._id);
     if (data._id && user._id) {
       fetchUserProfileById(data._id)
         .then((res) => {
@@ -167,7 +168,7 @@ const UserCard = (props) => {
           setError(e.message || "Something went wrong!");
         });
     }
-  }, [data._id])
+  }, [data._id]);
 
   const handlePageChange = () => {
     setCounter((prev) => {
@@ -177,28 +178,30 @@ const UserCard = (props) => {
 
   return (
     <Card className={classes.CARD}>
-      {end.title && <Modal
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box sx={style}>
-          <Typography id="modal-modal-title" variant="h6" component="h2">
-            {end.title}
-          </Typography>
-          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            {end.description}
-          </Typography>
-        </Box>
-      </Modal>}
+      {end.title && (
+        <Modal
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <Box sx={style}>
+            <Typography id="modal-modal-title" variant="h6" component="h2">
+              {end.title}
+            </Typography>
+            <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+              {end.description}
+            </Typography>
+          </Box>
+        </Modal>
+      )}
 
       <Grid container>
         {/* top */}
 
         {!loading ? (
           <Grid item container xs={12} md={12}>
-            <UCTop data={{ ...data, preVote: preVote}} />
+            <UCTop data={{ ...data, preVote: preVote }} />
           </Grid>
         ) : (
           <Grid

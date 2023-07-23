@@ -2,7 +2,7 @@ const router = require("express").Router();
 const authController = require("../controller/authController");
 
 // Get a User
-router.get("/user", authController.isAuthenticated, (req, res) => {
+router.post("/user", authController.isAuthenticated, (req, res) => {
   res.json(req.user);
 });
 
