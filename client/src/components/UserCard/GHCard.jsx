@@ -67,11 +67,9 @@ const GHCard = (props) => {
       let res = await axios.post(`/scrap/github/${props.handle}`);
       // let res = await axios.get(`/scrap/github/adijr9487`);
       setLoading(false);
-      console.log(res.data.stats);
       return res.data.stats;
     } catch (e) {
       setLoading(false);
-      // console.log(e);
       setError(e.message || "Something went wrong!");
     }
   };
@@ -88,7 +86,6 @@ const GHCard = (props) => {
         setData(fieldObj);
       })
       .catch((e) => {
-        console.log(e);
         setError(e.message || "Something went wrong!");
       });
   }, [props.handle]);

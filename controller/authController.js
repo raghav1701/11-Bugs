@@ -117,7 +117,6 @@ exports.signup = async (req, res) => {
     // newUser.password = "";
     res.status(200).json({ _id: newUser._id });
   } catch (e) {
-    console.log(e);
     errorHander.handleInternalServer(res);
     // res.json({ error: e || "Someting went wrong" });
   }
@@ -162,7 +161,6 @@ exports.signin = async (req, res) => {
     // user.password = "";
     res.status(200).json({ _id: user._id });
   } catch (e) {
-    console.log(e);
     res.json({ error: e || "Something went wrong" });
   }
 };

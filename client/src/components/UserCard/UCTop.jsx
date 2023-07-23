@@ -113,19 +113,17 @@ const UCTop = (props) => {
   const handleClose = () => setOpen(false);
 
   const handleAlignment = (newVote) => {
-    // console.log(event.target.value);
     // const newVote = event.target.value;
-    console.log(newVote, vote);
     postVote(newVote)
       .then((res) => {
-        if (vote === "") {
-          setVote(newVote);
-        } else {
-          if (vote !== newVote) setVote(newVote);
-        }
+        // if (vote === "") {
+        //   setVote(newVote);
+        // } else {
+        //   if (vote !== newVote)
+        // }
+        setVote(newVote);
       })
       .catch((e) => {
-        console.log(e);
         setError(e.message || "Something went wrong!");
       });
   };
@@ -133,16 +131,12 @@ const UCTop = (props) => {
   const postVote = async (vote) => {
     try {
       setLoading(true);
-      console.log(props.data._id, props.data);
       let res = await axios.post(
         `/profile/${props.data._id}/${vote === 1 ? "upvote" : "downvote"}`
       );
       setLoading(false);
-      console.log(res.data);
-      // console.log(res.data.results[0]);
       return res.data;
     } catch (e) {
-      console.log(e);
       setError(e.message || "Something went wrong!");
       setLoading(false);
     }
@@ -226,6 +220,7 @@ const UCTop = (props) => {
             <ToggleButton
               onClick={() => handleAlignment(1)}
               value={1}
+              selected={vote === 1}
               // className={[classes.VoteButton, classes.VoteUp]}
             >
               <ThumbUpAltOutlinedIcon color="success" />
@@ -247,6 +242,7 @@ const UCTop = (props) => {
             <ToggleButton
               onClick={() => handleAlignment(-1)}
               value={-1}
+              selected={vote === -1}
               // className={[classes.VoteButton, classes.VoteDown]}
             >
               <ThumbDownOutlinedIcon

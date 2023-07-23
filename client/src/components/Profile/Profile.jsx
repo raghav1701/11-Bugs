@@ -87,7 +87,6 @@ const Profile = () => {
       return res.data.user;
     } catch (e) {
       setLoading(false);
-      console.log(e);
       setError(e.message || "Something went wrong!");
     }
   };
@@ -135,7 +134,6 @@ const Profile = () => {
         setData({ ...res });
       })
       .catch((e) => {
-        console.log(e);
         setError(e.message || "Something went wrong!");
       });
   }, [params.id, mount]);
@@ -157,7 +155,11 @@ const Profile = () => {
                       md={4}
                       sx={{ display: "flex", justifyContent: "center" }}
                     >
-                      <Avatar sx={{ width: 72, height: 72 }} />
+                      <Avatar
+                        alt="Avatar"
+                        src={`${data.avatar}`}
+                        sx={{ width: 72, height: 72 }}
+                      />
                     </Grid>
                     <Grid item xs={true} alignSelf="center" align="center">
                       <Typography variant="h6">{data.name}</Typography>
@@ -243,6 +245,7 @@ const Profile = () => {
                           key={i}
                           user={f}
                           type="friend"
+                          data={data}
                           changeMount={changeMount}
                         />
                       ))
@@ -259,6 +262,7 @@ const Profile = () => {
                           <UserCard
                             key={i}
                             user={f}
+                            data={data}
                             type="pending"
                             changeMount={changeMount}
                           />
@@ -277,6 +281,7 @@ const Profile = () => {
                           <UserCard
                             key={i}
                             user={f}
+                            data={data}
                             type="request"
                             changeMount={changeMount}
                           />

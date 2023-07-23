@@ -36,7 +36,6 @@ exports.calculateGithub = (details) => {
     //   (Math.min(repos, maxRepos) / maxRepos) * weights.github.repos +
     //   (Math.min(contributions, maxContributions) / maxContributions) *
     //     weights.github.contributions;
-    // console.log(score / total);
     // return score / total;
     const score =
       ((Number(details.star) * weights.github.stars +
@@ -71,7 +70,6 @@ exports.calculateCodeChef = (details) => {
     var cost = 100 / 22;
     if (rating < 1000) return cost;
     const val = (Math.ceil((Number(rating) - 1000) / 100) + 1) * cost;
-    console.log(val);
     return Math.min(val, 100);
   } catch (e) {
     return e;
@@ -92,8 +90,6 @@ exports.calculateKarma = (details) => {
     const review =
       Number(details.upvotes) /
         (Number(details.upvotes) + Number(details.downvotes)) || 0;
-    console.log(profiles);
-    console.log(review);
     return profiles * weights.karma.profiles + review * weights.karma.review;
   } catch (e) {
     return e;

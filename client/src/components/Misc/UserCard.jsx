@@ -47,7 +47,7 @@ const UserCard = (props) => {
           </ListItemIcon>
           <ListItemText primary={props.user.name} />
         </ListItemButton>
-        {type === "friend" && props.user._id !== user._id && (
+        {user._id && type === "friend" && props.data._id === user._id && (
           <Box>
             <Tooltip title="Remove">
               <IconButton onClick={removeFriend}>

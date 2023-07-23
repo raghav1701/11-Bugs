@@ -43,7 +43,6 @@ const MainComponent = () => {
               id: res.id,
             };
           });
-          console.log("Logged in");
           // navigate("/");
         }
       })

@@ -71,7 +71,6 @@ const CFCard = (props) => {
       return res.data.stats;
     } catch (e) {
       setLoading(false);
-      // console.log(e);
       setError(e.message || "Something went wrong!");
     }
   };
@@ -90,7 +89,6 @@ const CFCard = (props) => {
         setData(fieldObj);
       })
       .catch((e) => {
-        console.log(e);
         setError(e.message || "Something went wrong!");
       });
   }, [props.handle]);
