@@ -116,7 +116,7 @@ exports.cc_scrapping = async (req, res) => {
         const username = req.params.cc_name;
         if (!username) throw Error("Username Unavailable");
         const dom = await htmlparser(
-            `https://www.codechef.com/users/${username}`
+            `https://www.codechef.com/users/${username}`,
         );
         const $ = cheerio.load(dom);
 
@@ -181,7 +181,7 @@ exports.cf_scrapping = async (req, res) => {
         const username = req.params.cf_name;
         if (!username) throw Error("Username Unavailable");
         const dom = await htmlparser(
-            `https://codeforces.com/profile/${username}`
+            `https://codeforces.com/profile/${username}`,
         );
         const $ = cheerio.load(dom);
 
