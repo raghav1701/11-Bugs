@@ -33,13 +33,13 @@ app.use("/scrap", scrap);
 
 app.use("/friends", friends);
 if (process.env.NODE_ENV === "production") {
-  // Basename is client should be '/app'
-  app.get("*", (req, res) => {
-    res.sendFile(path.resolve(__dirname, "client", "build", "index.html"));
-  });
+    // Basename is client should be '/app'
+    app.get("*", (req, res) => {
+        res.sendFile(path.resolve(__dirname, "client", "build", "index.html"));
+    });
 }
 
 // Listen
 app.listen(PORT, () => {
-  console.log("Server is up and running!");
+    console.log("Server is up and running!");
 });

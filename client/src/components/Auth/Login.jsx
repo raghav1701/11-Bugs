@@ -93,8 +93,7 @@ const Login = () => {
                         width: "100%",
                         display: "flex",
                         alignItems: "center",
-                    }}
-                >
+                    }}>
                     <Avatar style={avatarStyle} className={classes.lock}>
                         <LockOutlinedIcon />
                     </Avatar>
@@ -134,16 +133,14 @@ const Login = () => {
                     style={btnstyle}
                     fullWidth
                     onClick={submitHandler}
-                    disabled={loader}
-                >
+                    disabled={loader}>
                     Sign in
                 </Button>
 
                 <Typography>
                     <NavLink
                         to="/auth/signup"
-                        style={{ color: theme.palette.text.primary }}
-                    >
+                        style={{ color: theme.palette.text.primary }}>
                         Do you have an account?
                     </NavLink>
                 </Typography>

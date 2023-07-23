@@ -3,7 +3,7 @@ const authController = require("../controller/authController");
 
 // Get a User
 router.post("/user", authController.isAuthenticated, (req, res) => {
-  res.json(req.user);
+    res.json(req.user);
 });
 
 //Set-up Signup Route

@@ -98,9 +98,9 @@ router.post("/recommend/no-auth", async (req, res) => {
             results = await Promise.all(
                 results.map((r) => {
                     return User.findById(r._id).select(
-                        "-password -friends -sent -received"
+                        "-password -friends -sent -received",
                     );
-                })
+                }),
             );
         }
 
@@ -175,7 +175,7 @@ router.post(
         } catch (e) {
             errorHandler.handleInternalServer(res);
         }
-    }
+    },
 );
 
 //Return the leaderboard
@@ -248,7 +248,7 @@ router.post(
         } catch (e) {
             errorHandler.handleInternalServer(res);
         }
-    }
+    },
 );
 
 module.exports = router;

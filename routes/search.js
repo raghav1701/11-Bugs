@@ -8,7 +8,7 @@ router.post("/", async (req, res) => {
         const { query } = req.body;
         if (!query) return errorHandler.handleBadRequest(res);
         const user = await User.findOne({ username: query }).select(
-            "name email username karma avatar"
+            "name email username karma avatar",
         );
         res.status(200).json({ user });
     } catch (e) {

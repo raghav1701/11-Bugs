@@ -177,8 +177,7 @@ const UserCard = (props) => {
                                 className={classes.LoaderGridTop}
                                 container
                                 xs={12}
-                                md={12}
-                            >
+                                md={12}>
                                 <CircularProgress
                                     sx={{
                                         p: theme.spacing(1),
@@ -202,8 +201,7 @@ const UserCard = (props) => {
                                 className={classes.LoaderGridBottom}
                                 container
                                 xs={12}
-                                md={12}
-                            >
+                                md={12}>
                                 <CircularProgress
                                     sx={{
                                         p: theme.spacing(1),
@@ -216,8 +214,7 @@ const UserCard = (props) => {
 
                     <Button
                         className={classes.NextButton}
-                        onClick={handlePageChange}
-                    >
+                        onClick={handlePageChange}>
                         <NavigateNextIcon />
                         {/* won't work on loading */}
                     </Button>
