@@ -24,6 +24,20 @@ import ArrowCircleDownIcon from "@mui/icons-material/ArrowCircleDown";
 import ShareIcon from "@mui/icons-material/Share";
 import { UserContext } from "../../contexts/UserContext";
 
+import Modal from "@mui/material/Modal";
+
+const style = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 400,
+  bgcolor: "background.paper",
+  border: "2px solid #000",
+  boxShadow: 24,
+  p: 4,
+};
+
 const useStyles = makeStyles((theme) => ({
   Header: {
     display: "flex",
@@ -91,21 +105,33 @@ const UCTop = (props) => {
   const [user, setUser] = React.useContext(UserContext);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
 
   const handleAlignment = (event, newVote) => {
+    console.log(newVote, vote);
     postVote(newVote)
-      .then((res) => {})
+      .then((res) => {
+        if (vote === "") {
+          setVote(newVote);
+        } else {
+          if (vote !== newVote) setVote(newVote);
+        }
+      })
       .catch((e) => {
         console.log(e);
+        setError(e.message || "Something went wrong!");
       });
-    setVote(newVote)
   };
 
   const postVote = async (vote) => {
     try {
       setLoading(true);
-      console.log(props.data._id, props.data)
-      let res = await axios.post(`/profile/${props.data._id}/${vote === 1 ? "upvote" : "downvote"}`);
+      console.log(props.data._id, props.data);
+      let res = await axios.post(
+        `/profile/${props.data._id}/${vote === 1 ? "upvote" : "downvote"}`
+      );
       setLoading(false);
       console.log(res.data);
       // console.log(res.data.results[0]);
@@ -120,6 +146,23 @@ const UCTop = (props) => {
   return (
     <Grid container item className={classes.Header}>
       {/* top left */}
+      {error && (
+        <Modal
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <Box sx={style}>
+            <Typography id="modal-modal-title" variant="h6" component="h2">
+              Error
+            </Typography>
+            <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+              {error}
+            </Typography>
+          </Box>
+        </Modal>
+      )}
       <Grid
         item
         container
@@ -237,9 +280,9 @@ const UCTop = (props) => {
           >
             <ToggleButton
               value={1}
-              className={[classes.VoteButton, classes.VoteUp]}
+              // className={[classes.VoteButton, classes.VoteUp]}
             >
-              <ArrowCircleUpIcon sx={{ color: "#39C98A" }} />
+              <ArrowCircleUpIcon color="success" />
             </ToggleButton>
             <Typography
               sx={{ padding: "1px" }}
@@ -249,9 +292,9 @@ const UCTop = (props) => {
             </Typography>
             <ToggleButton
               value={-1}
-              className={[classes.VoteButton, classes.VoteDown]}
+              // className={[classes.VoteButton, classes.VoteDown]}
             >
-              <ArrowCircleDownIcon sx={{ color: "#C93947" }} />
+              <ArrowCircleDownIcon color="error" />
             </ToggleButton>
           </ToggleButtonGroup>
         </Grid>

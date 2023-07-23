@@ -1,6 +1,6 @@
 import { Grid, CardMedia, Typography } from "@mui/material";
 
-const Error = ({ error }) => {
+const Err = ({ error }) => {
   return (
     <Grid container sx={{ height: "100vh" }}>
       <Grid
@@ -25,4 +25,4 @@ const Error = ({ error }) => {
   );
 };
 
-export default Error;
+export default Err;

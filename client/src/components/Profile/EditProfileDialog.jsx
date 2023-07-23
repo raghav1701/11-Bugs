@@ -27,7 +27,7 @@ const EditProfileDialog = (props) => {
         email: data.email,
         resume: data.resume,
       });
-      //   window.location.reload();
+      window.location.reload();
     } catch (e) {
       setError(e.message);
     }

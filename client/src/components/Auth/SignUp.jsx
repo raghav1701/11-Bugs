@@ -41,6 +41,7 @@ const Signup = (props) => {
   const navigate = useNavigate();
   const [user, setUser] = React.useContext(UserContext);
   const [name, setName] = useState("");
+  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState("");
@@ -53,7 +54,7 @@ const Signup = (props) => {
   const submitHandler = async (e) => {
     e.preventDefault();
     try {
-      if (!name || !email || !password) {
+      if (!name || !username || !email || !password) {
         setErrors("Please Fill the details");
         return;
       }
@@ -71,7 +72,12 @@ const Signup = (props) => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ name, email, password }),
+        body: JSON.stringify({
+          name,
+          username: username.trim(),
+          email,
+          password,
+        }),
       });
       res = await res.json();
       if (res._id) {
@@ -117,6 +123,18 @@ const Signup = (props) => {
           id="name"
           value={name}
           onChange={(e) => setName(e.target.value)}
+        />
+        <TextField
+          label="Username"
+          variant="outlined"
+          placeholder="Enter Username"
+          fullWidth
+          required
+          style={{ marginTop: "20px" }}
+          name="username"
+          id="username"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
         />
         <TextField
           label="Email"

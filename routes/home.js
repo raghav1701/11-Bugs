@@ -64,4 +64,71 @@ router.get("/recommend/no-auth", async (req, res) => {
   }
 });
 
+//Return the leaderboard
+router.post("/leaderboard/global", async (req, res) => {
+  try {
+    const temp = User.aggregate([
+      {
+        $setWindowFields: {
+          sortBy: { karma: -1 },
+          output: {
+            rank: {
+              $rank: {},
+            },
+          },
+        },
+      },
+      {
+        $project: {
+          karma: 1,
+          rank: 1,
+          name: 1,
+        },
+      },
+    ]);
+    let result = await temp.exec();
+    res.status(200).json({ result });
+  } catch (e) {
+    console.log(e);
+    errorHandler.handleInternalServer(res);
+  }
+});
+
+// Return the leaderboard of friends
+router.post(
+  "/leaderboard/friends",
+  authController.isAuthenticated,
+  async (req, res) => {
+    try {
+      const temp = User.aggregate([
+        {
+          $setWindowFields: {
+            sortBy: { karma: -1 },
+            output: {
+              rank: {
+                $rank: {},
+              },
+            },
+          },
+        },
+        {
+          $project: {
+            karma: 1,
+            rank: 1,
+            name: 1,
+          },
+        },
+      ]);
+      let result = await temp.exec();
+      result = result.filter((user) => {
+        return req.user.friends.includes(user._id);
+      });
+      res.status(200).json({ result });
+    } catch (e) {
+      console.log(e);
+      errorHandler.handleInternalServer(res);
+    }
+  }
+);
+
 module.exports = router;
