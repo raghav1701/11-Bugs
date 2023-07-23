@@ -73,25 +73,21 @@ const LeaderBoard = () => {
                   "&:last-child td, &:last-child th": {
                     border: 0,
                   },
-                }}
-              >
+                }}>
                 <TableCell
-                  sx={{ borderBottom: `1px solid ${theme.palette.divider}` }}
-                >
+                  sx={{ borderBottom: `1px solid ${theme.palette.divider}` }}>
                   <Grid container>
                     <Typography>{row.rank}</Typography>
                   </Grid>
                 </TableCell>
                 <TableCell
-                  sx={{ borderBottom: `1px solid ${theme.palette.divider}` }}
-                >
+                  sx={{ borderBottom: `1px solid ${theme.palette.divider}` }}>
                   <Link href={`/profile/${row._id}`}>
                     <Typography className={classes.name}>{row.name}</Typography>
                   </Link>
                 </TableCell>
                 <TableCell
-                  sx={{ borderBottom: `1px solid ${theme.palette.divider}` }}
-                >
+                  sx={{ borderBottom: `1px solid ${theme.palette.divider}` }}>
                   <Typography>
                     {Math.round((row.karma + Number.EPSILON) * 100) / 100}
                   </Typography>

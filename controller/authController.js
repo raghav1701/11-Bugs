@@ -141,7 +141,7 @@ exports.signin = async (req, res) => {
     // Check the password is correct or not
     const compareHashedPassword = await comparePassword(
       req.body.password,
-      user.password
+      user.password,
     );
     if (!compareHashedPassword)
       return errorHander.handleBadRequest(res, "Invalid Credentials");

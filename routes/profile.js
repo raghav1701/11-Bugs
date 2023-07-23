@@ -113,7 +113,7 @@ router.post(
     } catch (error) {
       errorHander.handleInternalServer(res);
     }
-  }
+  },
 );
 
 // Update a handle

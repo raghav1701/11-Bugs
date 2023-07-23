@@ -51,8 +51,7 @@ const Navbar = (props) => {
   return (
     <AppBar
       position="sticky"
-      sx={{ background: theme.palette.background.paper }}
-    >
+      sx={{ background: theme.palette.background.paper }}>
       <Toolbar>
         <Link
           style={{
@@ -61,13 +60,11 @@ const Navbar = (props) => {
             alignItems: "center",
             color: theme.palette.text.primary,
           }}
-          to="/"
-        >
+          to="/">
           <Typography
             variant="h5"
             color={theme.palette.text.primary}
-            sx={{ verticalAlign: "center", font: "Stencil" }}
-          >
+            sx={{ verticalAlign: "center", font: "Stencil" }}>
             11
           </Typography>
           <BugReportIcon sx={{ fontSize: 32 }} />
@@ -96,8 +93,7 @@ const Navbar = (props) => {
           <Link
             to="/auth/signin"
             style={{ textDecoration: "none" }}
-            className={classes.options}
-          >
+            className={classes.options}>
             <Button color="primary" variant="contained">
               Login
             </Button>

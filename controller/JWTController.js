@@ -22,7 +22,7 @@ exports.setCookies = (res, user) => {
       {
         httpOnly: false,
         maxAge: this.accessExpiry * 1000,
-      }
+      },
     );
     res.cookie("refresh", refreshToken, {
       httpOnly: true,
@@ -45,7 +45,7 @@ exports.createJWT = (user) => {
       process.env.JWT_SECRET,
       {
         expiresIn: this.accessExpiry,
-      }
+      },
     );
   } catch (e) {
     return e;

@@ -130,8 +130,7 @@ const Profile = () => {
                       item
                       xs={12}
                       md={4}
-                      sx={{ display: "flex", justifyContent: "center" }}
-                    >
+                      sx={{ display: "flex", justifyContent: "center" }}>
                       <Avatar sx={{ width: 72, height: 72 }} />
                     </Grid>
                     <Grid item xs={true} alignSelf="center" align="center">
@@ -146,8 +145,7 @@ const Profile = () => {
                   {user._id === data._id && (
                     <Tooltip
                       title="Edit"
-                      sx={{ position: "absolute", right: 0, bottom: 0 }}
-                    >
+                      sx={{ position: "absolute", right: 0, bottom: 0 }}>
                       <IconButton onClick={handleOpen}>
                         <Edit />
                       </IconButton>

@@ -31,8 +31,7 @@ const UserList = (props) => {
                 width: "100%",
                 maxHeight: "60vh",
                 overflow: "auto",
-              }}
-            >
+              }}>
               {children}
             </List>
           )

@@ -21,8 +21,7 @@ const ScoreCard = (props) => {
             fontSize: sz,
             transform: "rotate(-90deg)",
             transition: "all 1s ease-in-out",
-          }}
-        >
+          }}>
           <circle
             r={radius}
             cx={12}
@@ -58,8 +57,7 @@ const ScoreCard = (props) => {
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-          }}
-        >
+          }}>
           <Typography color="text.secondary" sx={{ fontWeight: "bold" }}>
             {Math.round(props.value)}
           </Typography>

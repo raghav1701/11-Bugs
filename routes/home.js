@@ -51,9 +51,9 @@ router.get("/recommend/no-auth", async (req, res) => {
       results = await Promise.all(
         results.map((r) => {
           return User.findById(r._id).select(
-            "-password -review -friends -sent -received"
+            "-password -review -friends -sent -received",
           );
-        })
+        }),
       );
     }
 
@@ -128,7 +128,7 @@ router.post(
       console.log(e);
       errorHandler.handleInternalServer(res);
     }
-  }
+  },
 );
 
 module.exports = router;

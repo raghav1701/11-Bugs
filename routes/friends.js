@@ -7,7 +7,7 @@ const errorHandler = require("../handler/error");
 router.get("/", authController.isAuthenticated, async (req, res) => {
   try {
     const friends = await Promise.all(
-      req.user.friends.map((id) => User.findById(id).select("-password"))
+      req.user.friends.map((id) => User.findById(id).select("-password")),
     );
     res.status(200).json({ friends });
   } catch (e) {

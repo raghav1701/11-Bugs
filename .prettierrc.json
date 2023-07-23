@@ -1,0 +1,36 @@
+{
+    "bracketSpacing": true,
+    "jsxBracketSameLine": true,
+    "singleQuote": false,
+    "trailingComma": "all",
+    "tabWidth": 2,
+    "overrides": [
+        {
+            "files": "*.yaml",
+            "options": {
+                "tabWidth": 2
+            }
+        }
+    ],
+    "importOrder": [
+        "^react$",
+        "^\\@apollo/(.*)$",
+        "^\\@mui/material(/(.*))?$",
+        "^\\@mui/lab(/(.*))?$",
+        "^\\@mui/icons-material(/(.*))?$",
+        "^next/(.*)$",
+        "<THIRD_PARTY_MODULES>",
+        "^\\@source/layouts(/(.*))?$",
+        "^\\@source/pages(/(.*))?$",
+        "^\\@source/sdk(/(.*))?$",
+        "^\\@source/types(/(.*))?$",
+        "^\\@source/utils(/(.*))?$",
+        "^\\@source/(.*)$",
+        "^\\.\\.(/(.*))?$",
+        "^\\.(/(.*))?$"
+    ],
+    "importOrderSeparation": true,
+    "importOrderSortSpecifiers": true,
+    "importOrderGroupNamespaceSpecifiers": true,
+    "importOrderCaseInsensitive": false
+}

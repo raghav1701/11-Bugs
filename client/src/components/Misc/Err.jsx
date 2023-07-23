@@ -8,8 +8,7 @@ const Err = ({ error }) => {
         xs={12}
         display="flex"
         alignItems="center"
-        justifyContent="center"
-      >
+        justifyContent="center">
         <CardMedia
           component="img"
           image={process.env.PUBLIC_URL + "/sad.svg"}

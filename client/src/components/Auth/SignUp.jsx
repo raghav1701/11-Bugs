@@ -105,8 +105,7 @@ const Signup = (props) => {
             width: "100%",
             display: "flex",
             alignItems: "center",
-          }}
-        >
+          }}>
           <Avatar style={avatarStyle} className={classes.lock}>
             <LockOutlinedIcon />
           </Avatar>
@@ -170,16 +169,14 @@ const Signup = (props) => {
           style={btnstyle}
           fullWidth
           onClick={submitHandler}
-          disabled={loader}
-        >
+          disabled={loader}>
           Signup
         </Button>
 
         <Typography>
           <NavLink
             to="/auth/signin"
-            style={{ color: theme.palette.text.primary }}
-          >
+            style={{ color: theme.palette.text.primary }}>
             Already have an account?
           </NavLink>
         </Typography>

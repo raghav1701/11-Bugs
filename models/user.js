@@ -20,7 +20,7 @@ const UserSchema = mongoose.Schema({
     require: true,
   },
   avatar: {
-    type: String
+    type: String,
   },
 
   // Overall Score
@@ -34,17 +34,17 @@ const UserSchema = mongoose.Schema({
     github: {
       type: String,
       require: true,
-      default: ""
+      default: "",
     },
     codechef: {
       type: String,
       require: true,
-      default: ""
+      default: "",
     },
     codeforces: {
       type: String,
       require: true,
-      default: ""
+      default: "",
     },
   },
 
@@ -53,17 +53,17 @@ const UserSchema = mongoose.Schema({
     github: {
       type: Number,
       require: true,
-      default: 0
+      default: 0,
     },
     codechef: {
       type: Number,
       require: true,
-      default: 0
+      default: 0,
     },
     codeforces: {
       type: Number,
       require: true,
-      default: 0
+      default: 0,
     },
   },
 
@@ -71,34 +71,42 @@ const UserSchema = mongoose.Schema({
   // Neutral 0
   // Upvote 1
   // Downvote -1
-  review: [{
-    user: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User"
+  review: [
+    {
+      user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+      },
+      value: {
+        type: Number,
+        default: 0,
+        enum: [-1, 0, 1],
+      },
     },
-    value: {
-      type: Number,
-      default: 0,
-      enum: [-1, 0, 1]
-    },
-  }, ],
+  ],
 
   // Resume
   resume: { type: String, default: "", require: true },
 
   // Friends
-  friends: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User"
-  }],
-  sent: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User"
-  }],
-  received: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User"
-  }],
+  friends: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
+  ],
+  sent: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
+  ],
+  received: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
+  ],
 });
 
 const User = mongoose.model("User", UserSchema);

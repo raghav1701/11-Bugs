@@ -95,8 +95,7 @@ const Stats = (props) => {
         sx={{
           display: "flex",
           flexDirection: "column",
-        }}
-      >
+        }}>
         <Grid container alignItems="center" sx={{ width: "100%", mb: 2 }}>
           <Grid item sx={{ px: 1 }}>
             <GitHubIcon />
@@ -136,8 +135,7 @@ const Stats = (props) => {
                           width: "100%",
                           maxWidth: 250,
                           px: 1,
-                        }}
-                      >
+                        }}>
                         <Typography sx={{ mr: "auto" }} color="text.disabled">
                           {s.label}
                         </Typography>

@@ -37,8 +37,7 @@ const ProfilePop = (props) => {
       open={props.open}
       onClose={props.handleClose}
       transformOrigin={{ horizontal: "right", vertical: "top" }}
-      anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
-    >
+      anchorOrigin={{ horizontal: "right", vertical: "bottom" }}>
       <MenuItem onClick={goToProfile}>
         <ListItemIcon>
           <AccountCircleIcon />
