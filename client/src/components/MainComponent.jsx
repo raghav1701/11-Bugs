@@ -20,7 +20,10 @@ const MainComponent = () => {
     const navigate = useNavigate();
     const fetchUser = async () => {
         try {
-            let res = await fetch("/auth/user", { method: "POST" });
+            let res = await fetch(
+                `${process.env.REACT_APP_BASE_URL}/auth/user`,
+                { method: "POST" },
+            );
             let status = res.status;
             res = await res.json();
             if (status === 200) {

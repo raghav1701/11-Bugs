@@ -6,9 +6,12 @@ import CheckIcon from "@mui/icons-material/Check";
 const Request = (props) => {
     const acceptRequest = async () => {
         try {
-            const res = await axios.post("/friends/accept", {
-                user: props.user._id,
-            });
+            const res = await axios.post(
+                `${process.env.REACT_APP_BASE_URL}/friends/accept`,
+                {
+                    user: props.user._id,
+                },
+            );
             props.changeMount();
         } catch (e) {
             props.setError(e.message);
@@ -16,9 +19,12 @@ const Request = (props) => {
     };
     const declineRequest = async () => {
         try {
-            const res = await axios.post("/friends/decline", {
-                user: props.user._id,
-            });
+            const res = await axios.post(
+                `${process.env.REACT_APP_BASE_URL}/friends/decline`,
+                {
+                    user: props.user._id,
+                },
+            );
             props.changeMount();
         } catch (e) {
             props.setError(e.message);

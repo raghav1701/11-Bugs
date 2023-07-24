@@ -1,28 +1,21 @@
 import React, { useState, useContext } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import Grid from "@mui/material/Grid";
-import Paper from "@mui/material/Paper";
 import Avatar from "@mui/material/Avatar";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import Link from "@mui/material/Link";
-import Checkbox from "@mui/material/Link";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { makeStyles } from "@mui/styles";
-
 import { UserContext } from "../../contexts/UserContext";
 import { Box, Card, useTheme } from "@mui/material";
 
 const useStyles = makeStyles((theme) => ({
     container: {
-        // width: '100vw',
         minHeight: "90vh",
         margin: "0",
         display: "flex",
         alignItems: "center",
-        // border: `1px solid ${theme.palette.divider}`,
-        // borderRadius: '1rem',
     },
     form: {
         width: "100%",
@@ -63,13 +56,16 @@ const Login = () => {
                 return;
             }
             setLoader(true);
-            let res = await fetch("/auth/signin", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
+            let res = await fetch(
+                `${process.env.REACT_APP_BASE_URL}/auth/signin`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ email, password }),
                 },
-                body: JSON.stringify({ email, password }),
-            });
+            );
             res = await res.json();
             if (res._id) {
                 setUser(res);

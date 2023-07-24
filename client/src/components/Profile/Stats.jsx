@@ -44,7 +44,9 @@ const Stats = (props) => {
     const fetchStats = async () => {
         try {
             const res = await axios.post(
-                `/scrap/${code.toLowerCase()}/${handle}`,
+                ` ${
+                    process.env.REACT_APP_BASE_URL
+                }/scrap/${code.toLowerCase()}/${handle}`,
             );
             return res.data;
         } catch (e) {

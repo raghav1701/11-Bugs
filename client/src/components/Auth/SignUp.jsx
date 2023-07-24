@@ -1,13 +1,10 @@
 import React, { useState } from "react";
-import { NavLink, useHistory, useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import Grid from "@mui/material/Grid";
-import Paper from "@mui/material/Paper";
 import Avatar from "@mui/material/Avatar";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import Link from "@mui/material/Link";
-import Checkbox from "@mui/material/Link";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { makeStyles } from "@mui/styles";
 import { UserContext } from "../../contexts/UserContext";
@@ -67,18 +64,22 @@ const Signup = (props) => {
                 return;
             }
             setLoader(true);
-            let res = await fetch("/auth/signup", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
+
+            let res = await fetch(
+                `${process.env.REACT_APP_BASE_URL}/auth/signup`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        name,
+                        username: username.trim(),
+                        email,
+                        password,
+                    }),
                 },
-                body: JSON.stringify({
-                    name,
-                    username: username.trim(),
-                    email,
-                    password,
-                }),
-            });
+            );
             res = await res.json();
             if (res._id) {
                 setUser(res);

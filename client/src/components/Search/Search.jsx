@@ -48,7 +48,10 @@ const Search = () => {
     const handleSearch = async () => {
         setSearch(true);
         try {
-            const res = await axios.post("/search", { query });
+            const res = await axios.post(
+                `${process.env.REACT_APP_BASE_URL}/search`,
+                { query },
+            );
             setData(res.data.user);
         } catch (e) {
             console.log(e.message);

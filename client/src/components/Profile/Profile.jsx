@@ -83,7 +83,9 @@ const Profile = () => {
         try {
             setError("");
             setLoading(true);
-            let res = await axios.post(`/profile/${params.id}`);
+            let res = await axios.post(
+                ` ${process.env.REACT_APP_BASE_URL}/profile/${params.id}`,
+            );
             setLoading(false);
             return res.data.user;
         } catch (e) {
@@ -94,11 +96,14 @@ const Profile = () => {
 
     const updateScore = async (score, code, userID) => {
         try {
-            const res = await axios.patch("/profile/score", {
-                code: code.toLowerCase(),
-                score,
-                userID,
-            });
+            const res = await axios.patch(
+                `${process.env.REACT_APP_BASE_URL}/profile/score`,
+                {
+                    code: code.toLowerCase(),
+                    score,
+                    userID,
+                },
+            );
             changeKarma(res.data.karma);
         } catch (e) {
             console.log(e);
@@ -107,9 +112,12 @@ const Profile = () => {
 
     const addFriend = async () => {
         try {
-            const res = await axios.post("/friends/request", {
-                userID: data._id,
-            });
+            const res = await axios.post(
+                `${process.env.REACT_APP_BASE_URL}/friends/request`,
+                {
+                    userID: data._id,
+                },
+            );
             changeMount();
         } catch (e) {
             console.log(e);
