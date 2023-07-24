@@ -28,9 +28,12 @@ const UserCard = (props) => {
     };
     const removeFriend = async () => {
         try {
-            const res = await axios.post("/friends/remove", {
-                user: props.user._id,
-            });
+            const res = await axios.post(
+                `${process.env.REACT_APP_BASE_URL}/friends/remove`,
+                {
+                    user: props.user._id,
+                },
+            );
             props.changeMount();
         } catch (e) {
             setError(e.message);

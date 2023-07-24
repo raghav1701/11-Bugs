@@ -58,7 +58,9 @@ const LeaderBoard = (props) => {
 
     const fetchData = async () => {
         try {
-            const res = await axios.post(`/leaderboard/${type}`);
+            const res = await axios.post(
+                `${process.env.REACT_APP_BASE_URL}/leaderboard/${type}`,
+            );
             setData(res.data.result);
         } catch (e) {
             setError(e.message);

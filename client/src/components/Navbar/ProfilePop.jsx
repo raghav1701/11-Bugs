@@ -12,7 +12,10 @@ const ProfilePop = (props) => {
     //   Logout
     const handleLogout = async () => {
         try {
-            let res = await fetch("/auth/logout", { method: "POST" });
+            let res = await fetch(
+                `${process.env.REACT_APP_BASE_URL}/auth/logout`,
+                { method: "POST" },
+            );
             res = await res.json();
             if (!res.success) throw res.error;
             else {

@@ -65,7 +65,9 @@ const CFCard = (props) => {
         try {
             setError("");
             setLoading(true);
-            let res = await axios.post(`/scrap/codeforces/${props.handle}`);
+            let res = await axios.post(
+                ` ${process.env.REACT_APP_BASE_URL}/scrap/codeforces/${props.handle}`,
+            );
             // let res = await axios.get(`/scrap/codeforces/tourist`);
             setLoading(false);
             return res.data.stats;

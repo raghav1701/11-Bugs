@@ -24,12 +24,15 @@ const EditProfileDialog = (props) => {
 
     const save = async () => {
         try {
-            const res = await axios.patch("/profile", {
-                name: data.name,
-                email: data.email,
-                resume: data.resume,
-                avatar: data.avatar,
-            });
+            const res = await axios.patch(
+                `${process.env.REACT_APP_BASE_URL}/profile`,
+                {
+                    name: data.name,
+                    email: data.email,
+                    resume: data.resume,
+                    avatar: data.avatar,
+                },
+            );
             window.location.reload();
         } catch (e) {
             setError(e.message);
