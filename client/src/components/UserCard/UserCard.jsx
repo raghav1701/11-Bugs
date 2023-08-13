@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { styled } from "@mui/material/styles";
 
 import Grid from "@mui/material/Grid";
-import Avatar from "@mui/material/Avatar";
+
 import Card from "@mui/material/Card";
 import { makeStyles } from "@mui/styles";
 
@@ -11,21 +10,13 @@ import UCBottom from "./UCBottom";
 
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import Button from "@mui/material/Button";
-import {
-    CircularProgress,
-    Dialog,
-    DialogContent,
-    IconButton,
-} from "@mui/material";
+import { CircularProgress } from "@mui/material";
 import { useTheme } from "@mui/material";
 
 import axios from "axios";
 
-import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import Modal from "@mui/material/Modal";
 
-import Context from "@mui/base/TabsUnstyled/TabsContext";
 import { UserContext } from "../../contexts/UserContext";
 
 const style = {
@@ -110,9 +101,12 @@ const UserCard = (props) => {
         try {
             setError("");
             setLoading(true);
-            let res = await axios.post(`/recommend/no-auth?page=${counter}`, {
-                user: user._id,
-            });
+            let res = await axios.post(
+                ` ${process.env.REACT_APP_BASE_URL}/recommend/no-auth?page=${counter}`,
+                {
+                    user: user._id,
+                },
+            );
             setLoading(false);
             return res.data.results[0];
         } catch (e) {
@@ -177,8 +171,7 @@ const UserCard = (props) => {
                                 className={classes.LoaderGridTop}
                                 container
                                 xs={12}
-                                md={12}
-                            >
+                                md={12}>
                                 <CircularProgress
                                     sx={{
                                         p: theme.spacing(1),
@@ -202,8 +195,7 @@ const UserCard = (props) => {
                                 className={classes.LoaderGridBottom}
                                 container
                                 xs={12}
-                                md={12}
-                            >
+                                md={12}>
                                 <CircularProgress
                                     sx={{
                                         p: theme.spacing(1),
@@ -216,8 +208,7 @@ const UserCard = (props) => {
 
                     <Button
                         className={classes.NextButton}
-                        onClick={handlePageChange}
-                    >
+                        onClick={handlePageChange}>
                         <NavigateNextIcon />
                         {/* won't work on loading */}
                     </Button>

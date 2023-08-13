@@ -1,22 +1,18 @@
-const router = require("express").Router();
-const authController = require("../controller/authController");
-const User = require("../models/User");
-const errorHandler = require("../handler/error");
+import User from "../models/User";
+import { errorHandler } from "../handler";
 
-// Get all friends
-router.get("/", authController.isAuthenticated, async (req, res) => {
+export const getAllFriends = async (req, res) => {
     try {
         const friends = await Promise.all(
-            req.user.friends.map((id) => User.findById(id).select("-password"))
+            req.user.friends.map((id) => User.findById(id).select("-password")),
         );
         res.status(200).json({ friends });
     } catch (e) {
         errorHandler.handleInternalServer(res);
     }
-});
+};
 
-// Create friend request
-router.post("/request", authController.isAuthenticated, async (req, res) => {
+export const createFriendRequest = async (req, res) => {
     try {
         if (req.body.userID === req.user._id)
             return errorHandler.handleBadRequest(res);
@@ -50,28 +46,25 @@ router.post("/request", authController.isAuthenticated, async (req, res) => {
     } catch (e) {
         errorHandler.handleInternalServer(res);
     }
-});
+};
 
-// Get requests received
-router.get("/request", authController.isAuthenticated, async (req, res) => {
+export const getFriendRequest = (req, res) => {
     try {
         res.status(200).json({ received: req.user.received || [] });
     } catch (e) {
         errorHandler.handleInternalServer(res);
     }
-});
+};
 
-// Get requests sent
-router.get("/sent", authController.isAuthenticated, async (req, res) => {
+export const getRequestSent = (req, res) => {
     try {
         res.status(200).json({ sent: req.user.sent || [] });
     } catch (e) {
         errorHandler.handleInternalServer(res);
     }
-});
+};
 
-// Remove friend
-router.post("/remove", authController.isAuthenticated, async (req, res) => {
+export const removeFriend = async (req, res) => {
     try {
         if (req.body.user === req.user._id)
             return errorHandler.handleBadRequest(res);
@@ -97,10 +90,9 @@ router.post("/remove", authController.isAuthenticated, async (req, res) => {
     } catch (e) {
         errorHandler.handleInternalServer(res);
     }
-});
+};
 
-// Accept Request
-router.post("/accept", authController.isAuthenticated, async (req, res) => {
+export const acceptRequest = async (req, res) => {
     try {
         const userID = req.body.user;
         if (!userID) return errorHandler.handleBadRequest(res);
@@ -127,10 +119,9 @@ router.post("/accept", authController.isAuthenticated, async (req, res) => {
     } catch (e) {
         errorHandler.handleInternalServer(res);
     }
-});
+};
 
-// Decline Request
-router.post("/decline", authController.isAuthenticated, async (req, res) => {
+export const declineRequest = async (req, res) => {
     try {
         const userID = req.body.user;
         if (!userID) return errorHandler.handleBadRequest(res);
@@ -155,6 +146,4 @@ router.post("/decline", authController.isAuthenticated, async (req, res) => {
     } catch (e) {
         errorHandler.handleInternalServer(res);
     }
-});
-
-module.exports = router;
+};

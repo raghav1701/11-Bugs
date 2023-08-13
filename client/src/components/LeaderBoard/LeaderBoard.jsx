@@ -58,7 +58,9 @@ const LeaderBoard = (props) => {
 
     const fetchData = async () => {
         try {
-            const res = await axios.post(`/leaderboard/${type}`);
+            const res = await axios.post(
+                `${process.env.REACT_APP_BASE_URL}/leaderboard/${type}`,
+            );
             setData(res.data.result);
         } catch (e) {
             setError(e.message);
@@ -73,8 +75,7 @@ const LeaderBoard = (props) => {
         <TableContainer className={classes.tableContainer} sx={{ py: 2 }}>
             <Table
                 aria-label="simple table"
-                sx={{ backgroundColor: theme.palette.background.paper }}
-            >
+                sx={{ backgroundColor: theme.palette.background.paper }}>
                 <TableHead>
                     <TableRow>
                         <TableCell className={classes.tableHeaderCell}>
@@ -92,7 +93,7 @@ const LeaderBoard = (props) => {
                     {data
                         .slice(
                             page * rowsperpage,
-                            page * rowsperpage + rowsperpage
+                            page * rowsperpage + rowsperpage,
                         )
                         .map((row, i) => (
                             <>
@@ -102,8 +103,7 @@ const LeaderBoard = (props) => {
                                         "&:last-child td, &:last-child th": {
                                             border: 0,
                                         },
-                                    }}
-                                >
+                                    }}>
                                     <TableCell>
                                         <Grid container>
                                             <Typography>{row.rank}</Typography>
@@ -112,8 +112,7 @@ const LeaderBoard = (props) => {
                                     <TableCell>
                                         <Link href={`/profile/${row._id}`}>
                                             <Typography
-                                                className={classes.name}
-                                            >
+                                                className={classes.name}>
                                                 {row.username}
                                             </Typography>
                                         </Link>
@@ -122,7 +121,7 @@ const LeaderBoard = (props) => {
                                         <Typography>
                                             {Math.round(
                                                 (row.karma + Number.EPSILON) *
-                                                    100
+                                                    100,
                                             ) / 100}
                                         </Typography>
                                     </TableCell>

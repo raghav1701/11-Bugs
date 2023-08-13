@@ -106,15 +106,13 @@ const CCCard = (props) => {
                         variant="h4"
                         component="div"
                         sx={{ marginBottom: "0" }}
-                        color="text.primary"
-                    >
+                        color="text.primary">
                         {data["Rating"]}
                     </Typography>
                     <Typography
                         variant="caption"
                         sx={{ fontWeight: "700" }}
-                        color="text.secondary"
-                    >
+                        color="text.secondary">
                         {Array(data["Stars"])
                             .fill("★")
                             .map((ele) => ele)}
@@ -131,8 +129,7 @@ const CCCard = (props) => {
                             target="_blank"
                             sx={{ fontSize: "10px" }}
                             href={data["profile_link"]}
-                            underline="none"
-                        >
+                            underline="none">
                             <OpenInNew />
                         </Link>
                     </CardActions>

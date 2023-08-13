@@ -12,30 +12,29 @@ import CFCard from "./CFCard";
 import GHCard from "./GHCard";
 
 const useStyle = makeStyles((theme) => ({
-  cpBox: {
-    display: "flex",
-    justifyContent: "center",
-    padding: "4px",
-  },
+    cpBox: {
+        display: "flex",
+        justifyContent: "center",
+        padding: "4px",
+    },
 }));
 
 const UCBottom = (props) => {
-  const classes = useStyle();
+    const classes = useStyle();
 
-
-  return (
-    <Grid item container xs={12}>
-      <Grid item container xs={12} md={4} className={classes.cpBox}>
-        <CCCard handle={props.handle.codechef} />
-      </Grid>
-      <Grid item container xs={12} md={4} className={classes.cpBox}>
-        <GHCard handle={props.handle.github} />
-      </Grid>
-      <Grid item container xs={12} md={4} className={classes.cpBox}>
-        <CFCard handle={props.handle.codeforces} />
-      </Grid>
-    </Grid>
-  );
+    return (
+        <Grid item container xs={12}>
+            <Grid item container xs={12} md={4} className={classes.cpBox}>
+                <CCCard handle={props.handle.codechef} />
+            </Grid>
+            <Grid item container xs={12} md={4} className={classes.cpBox}>
+                <GHCard handle={props.handle.github} />
+            </Grid>
+            <Grid item container xs={12} md={4} className={classes.cpBox}>
+                <CFCard handle={props.handle.codeforces} />
+            </Grid>
+        </Grid>
+    );
 };
 
 export default UCBottom;

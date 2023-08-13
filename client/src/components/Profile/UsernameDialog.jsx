@@ -20,10 +20,13 @@ const UsernameDialog = (props) => {
 
     const save = async () => {
         try {
-            const res = await axios.patch("/profile/handle", {
-                handle: value,
-                code: code,
-            });
+            const res = await axios.patch(
+                `${process.env.REACT_APP_BASE_URL}/profile/handle`,
+                {
+                    handle: value,
+                    code: code,
+                },
+            );
             window.location.reload();
         } catch (e) {
             setError(e.message);

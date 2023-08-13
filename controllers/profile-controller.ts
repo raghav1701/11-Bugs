@@ -1,11 +1,8 @@
-const router = require("express").Router();
-const authController = require("../controller/authController");
-const User = require("../models/User");
-const errorHander = require("../handler/error");
-const scoreController = require("../controller/scoreController");
+import User from "../models/User";
+import * as scoreController from "./score-controller";
+import { errorHandler } from "../handler";
 
-// Update a profile
-router.patch("/", authController.isAuthenticated, async (req, res) => {
+export const updateProfile = async (req, res) => {
     try {
         const update = await User.findByIdAndUpdate(req.user._id, {
             name: req.body.name || req.user.name,
@@ -15,17 +12,16 @@ router.patch("/", authController.isAuthenticated, async (req, res) => {
         });
         res.status(200).json({ message: "Updated!" });
     } catch (error) {
-        errorHander.handleInternalServer(res);
+        errorHandler.handleInternalServer(res);
     }
-});
+};
 
-// Update a profile score
-router.patch("/score", async (req, res) => {
+export const updateProfileScores = async (req, res) => {
     try {
         const { code, score, userID } = req.body;
 
         const user = await User.findById(userID);
-        if (!user) return errorHander.handleBadRequest(res);
+        if (!user) return errorHandler.handleBadRequest(res);
         const upvoteList = user.review.filter((r) => r.value === 1);
         const upvotes =
             upvoteList.length !== 0 ? upvoteList.reduce((p, c) => p + c) : 0;
@@ -44,7 +40,7 @@ router.patch("/score", async (req, res) => {
             downvotes,
         });
 
-        if (!code) return errorHander.handleBadRequest(res);
+        if (!code) return errorHandler.handleBadRequest(res);
         const field = {};
         field["scores." + code.toLowerCase()] = score || 0;
 
@@ -55,33 +51,31 @@ router.patch("/score", async (req, res) => {
 
         res.status(200).json({ karma: karma });
     } catch (error) {
-        errorHander.handleInternalServer(res);
+        errorHandler.handleInternalServer(res);
     }
-});
+};
 
-// Return a user profile
-router.post("/:id", async (req, res) => {
+export const getUserProfile = async (req, res) => {
     try {
         const id = req.params.id;
         const user = await User.findById(id).select("-password").populate({
             path: "friends received sent",
             select: "name avatar karma",
         });
-        if (!user) return errorHander.handleNotFound(res, "User Not Found");
+        if (!user) return errorHandler.handleNotFound(res, "User Not Found");
         res.status(200).json({ user });
     } catch (error) {
-        errorHander.handleInternalServer(res);
+        errorHandler.handleInternalServer(res);
     }
-});
+};
 
-// Upvote a profile
-router.post("/:id/upvote", authController.isAuthenticated, async (req, res) => {
+export const upvoteProfile = async (req, res) => {
     try {
         const id = req.params.id;
-        // if (req.user._id.equals(id)) return errorHander.handleBadRequest(res);
+        // if (req.user._id.equals(id)) return   errorHandler.handleBadRequest(res);
 
         const user = await User.findById(id);
-        if (!user) return errorHander.handleNotFound(res, "User Not Found!");
+        if (!user) return errorHandler.handleNotFound(res, "User Not Found!");
         await User.findByIdAndUpdate(id, {
             $pull: { review: { user: req.user._id } },
         });
@@ -90,46 +84,37 @@ router.post("/:id/upvote", authController.isAuthenticated, async (req, res) => {
         });
         res.status(200).json({ message: "Upvoted!" });
     } catch (error) {
-        errorHander.handleInternalServer(res);
+        errorHandler.handleInternalServer(res);
     }
-});
+};
 
-// Downvote a profile
-router.post(
-    "/:id/downvote",
-    authController.isAuthenticated,
-    async (req, res) => {
-        try {
-            const id = req.params.id;
-            // if (req.user._id.equals(id)) return errorHander.handleBadRequest(res);
-
-            const user = await User.findById(id);
-            if (!user)
-                return errorHander.handleNotFound(res, "User Not Found!");
-            await User.findByIdAndUpdate(id, {
-                $pull: { review: { user: req.user._id } },
-            });
-            const update = await User.findByIdAndUpdate(id, {
-                $push: { review: { user: req.user._id, value: -1 } },
-            });
-            res.status(200).json({ message: "Downvoted!" });
-        } catch (error) {
-            errorHander.handleInternalServer(res);
-        }
-    }
-);
-
-// Update a handle
-router.patch("/handle", authController.isAuthenticated, async (req, res) => {
+export const downvoteProfile = async (req, res) => {
     try {
-        if (!req.body.code) return errorHander.handleBadRequest(res);
+        const id = req.params.id;
+        // if (req.user._id.equals(id)) return   errorHandler.handleBadRequest(res);
+
+        const user = await User.findById(id);
+        if (!user) return errorHandler.handleNotFound(res, "User Not Found!");
+        await User.findByIdAndUpdate(id, {
+            $pull: { review: { user: req.user._id } },
+        });
+        const update = await User.findByIdAndUpdate(id, {
+            $push: { review: { user: req.user._id, value: -1 } },
+        });
+        res.status(200).json({ message: "Downvoted!" });
+    } catch (error) {
+        errorHandler.handleInternalServer(res);
+    }
+};
+
+export const updateHandle = async (req, res) => {
+    try {
+        if (!req.body.code) return errorHandler.handleBadRequest(res);
         const field = {};
         field["handles." + req.body.code.toLowerCase()] = req.body.handle;
         const update = await User.findByIdAndUpdate(req.user._id, field);
         res.status(200).json({ message: "Updated!" });
     } catch (error) {
-        errorHander.handleInternalServer(res);
+        errorHandler.handleInternalServer(res);
     }
-});
-
-module.exports = router;
+};
