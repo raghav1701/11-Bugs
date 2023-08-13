@@ -1,6 +1,6 @@
 import express from "express";
 const router = express.Router();
-import * as scrappingController from "../controller/scrappingController.js";
+import * as scrappingController from "../controllers/scrappingController.js";
 
 router.post("/github/:gh_name", scrappingController.gh_scrapping);
 

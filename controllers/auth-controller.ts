@@ -9,7 +9,7 @@ import * as errorHander from "../handler/error.js";
 // ----------------------------------------------------Helper Functions-----------------------------------------------------
 
 //check if a user is exists or not
-const userExists = async (email, username) => {
+const userExists = async (email, username?: string) => {
     const isUser = await User.findOne({ email: email });
     return isUser;
 };

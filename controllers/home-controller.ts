@@ -1,10 +1,7 @@
-import express from "express";
-const router = express.Router();
-import * as authController from "../controller/authController.js";
+import User from "../models/User";
 import * as errorHandler from "../handler/error.js";
-import User from "../models/User.js";
 
-router.post("/recommend", async (req, res) => {
+export const recommend = async (req, res) => {
     try {
         const page = Math.max(0, req.query.page || 0);
         const docsPerPage = 1;
@@ -28,9 +25,9 @@ router.post("/recommend", async (req, res) => {
     } catch (e) {
         errorHandler.handleInternalServer(res);
     }
-});
+};
 
-router.post("/recommend/no-auth", async (req, res) => {
+export const recommendNoAuth = async (req, res) => {
     try {
         const page = Math.max(0, req.query.page || 0);
         const docsPerPage = 1;
@@ -111,76 +108,71 @@ router.post("/recommend/no-auth", async (req, res) => {
     } catch (e) {
         errorHandler.handleInternalServer(res);
     }
-});
+};
 
-router.post(
-    "/recommend/auth",
-    authController.isAuthenticated,
-    async (req, res) => {
-        try {
-            const page = Math.max(0, req.query.page || 0);
-            const docsPerPage = 1;
+export const recommendAuth = async (req, res) => {
+    try {
+        const page = Math.max(0, req.query.page || 0);
+        const docsPerPage = 1;
 
-            // Sort the users by difference between current karma and user karma
-            const pipe = User.aggregate([
-                {
-                    $match: {
-                        _id: {
-                            $nin: [req.user._id, ...req.body.prev],
+        // Sort the users by difference between current karma and user karma
+        const pipe = User.aggregate([
+            {
+                $match: {
+                    _id: {
+                        $nin: [req.user._id, ...req.body.prev],
+                    },
+                },
+            },
+            {
+                $project: {
+                    review: 1,
+                    karma: 1,
+                    name: 1,
+                    username: 1,
+                    email: 1,
+                    handles: 1,
+                    avatar: 1,
+                    diff: {
+                        $abs: {
+                            $subtract: ["$karma", req.user.karma],
                         },
                     },
                 },
-                {
-                    $project: {
-                        review: 1,
-                        karma: 1,
-                        name: 1,
-                        username: 1,
-                        email: 1,
-                        handles: 1,
-                        avatar: 1,
-                        diff: {
-                            $abs: {
-                                $subtract: ["$karma", req.user.karma],
-                            },
-                        },
-                    },
+            },
+            {
+                $sort: {
+                    diff: 1,
                 },
-                {
-                    $sort: {
-                        diff: 1,
-                    },
-                },
-                {
-                    $skip: page * docsPerPage,
-                },
-                {
-                    $limit: docsPerPage,
-                },
-            ]);
+            },
+            {
+                $skip: page * docsPerPage,
+            },
+            {
+                $limit: docsPerPage,
+            },
+        ]);
 
-            let results = await pipe.exec();
-            // if (results.length !== 0) {
-            //   results = await Promise.all(
-            //     results.map((r) => {
-            //       return User.findById(r._id).select(
-            //         "-password -review -friends -sent -received"
-            //       );
-            //     })
-            //   );
-            // }
+        let results = await pipe.exec();
+        // if (results.length !== 0) {
+        //   results = await Promise.all(
+        //     results.map((r) => {
+        //       return User.findById(r._id).select(
+        //         "-password -review -friends -sent -received"
+        //       );
+        //     })
+        //   );
+        // }
 
-            res.status(200).json({
-                results,
-            });
-        } catch (e) {
-            errorHandler.handleInternalServer(res);
-        }
-    },
-);
+        res.status(200).json({
+            results,
+        });
+    } catch (e) {
+        errorHandler.handleInternalServer(res);
+    }
+};
 
-//Return the leaderboard
-router.post("/leaderboard/global", async (req, res) => {
+export const globalLeaderboard = async (req, res) => {
     try {
         const temp = User.aggregate([
             {
@@ -210,46 +202,39 @@ router.post("/leaderboard/global", async (req, res) => {
     } catch (e) {
         errorHandler.handleInternalServer(res);
     }
-});
+};
 
-// Return the leaderboard of friends
-router.post(
-    "/leaderboard/friends",
-    authController.isAuthenticated,
-    async (req, res) => {
-        try {
-            const temp = User.aggregate([
-                {
-                    $setWindowFields: {
-                        sortBy: {
-                            karma: -1,
-                        },
-                        output: {
-                            rank: {
-                                $rank: {},
-                            },
+export const friendsLeaderboard = async (req, res) => {
+    try {
+        const temp = User.aggregate([
+            {
+                $setWindowFields: {
+                    sortBy: {
+                        karma: -1,
+                    },
+                    output: {
+                        rank: {
+                            $rank: {},
                         },
                     },
                 },
-                {
-                    $project: {
-                        karma: 1,
-                        rank: 1,
-                        username: 1,
-                    },
+            },
+            {
+                $project: {
+                    karma: 1,
+                    rank: 1,
+                    username: 1,
                 },
-            ]);
-            let result = await temp.exec();
-            result = result.filter((user) => {
-                return req.user.friends.includes(user._id);
-            });
-            res.status(200).json({
-                result,
-            });
-        } catch (e) {
-            errorHandler.handleInternalServer(res);
-        }
-    },
-);
-
-export default router;
+            },
+        ]);
+        let result = await temp.exec();
+        result = result.filter((user) => {
+            return req.user.friends.includes(user._id);
+        });
+        res.status(200).json({
+            result,
+        });
+    } catch (e) {
+        errorHandler.handleInternalServer(res);
+    }
+};

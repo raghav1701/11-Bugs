@@ -7,12 +7,12 @@ import mongoose from "mongoose";
 import { fileURLToPath } from "url";
 
 // Routers
-import home from "../routes/home.js";
-import auth from "../routes/auth.js";
-import profile from "../routes/profile.js";
-import scrap from "../routes/scrap.js";
-import search from "../routes/search.js";
-import friends from "../routes/friends.js";
+import home from "../routes/home-routes.js";
+import auth from "../routes/auth-routes.js";
+import profile from "../routes/profile-routes.js";
+import scrap from "../routes/scrapping-routes.js";
+import search from "../routes/search-routes.js";
+import friends from "../routes/friend-routes.js";
 
 // App
 const app = express();

@@ -1,9 +1,9 @@
 import express from "express";
 const router = express.Router();
-import * as authController from "../controller/authController.js";
+import * as authController from "../controllers/authController.js.js";
 import User from "../models/User.js";
 import * as errorHander from "../handler/error.js";
-import * as scoreController from "../controller/scoreController.js";
+import * as scoreController from "../controllers/scoreController.js";
 
 // Update a profile
 router.patch("/", authController.isAuthenticated, async (req, res) => {
