@@ -1,6 +1,6 @@
 {
     "compilerOptions": {
-        "module": "commonjs",
+        "module": "CommonJS",
         "esModuleInterop": true,
         "target": "es6",
         "moduleResolution": "node",
@@ -10,6 +10,6 @@
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true
     },
-    "include": ["./source/**/*.ts"],
+    "include": ["./**/*.ts"],
     "lib": ["es2015", "es6"]
 }

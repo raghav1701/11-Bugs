@@ -1,17 +1,14 @@
 {
-    "name": "11bugs_1",
-    "version": "1.0.0",
-    "description": "",
-    "main": "server.js",
-    "type": "module",
+    "name": "11bugs",
+    "version": "0.0.0",
+    "description": "Personal Project",
+    "author": "Raghav Agrawal",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
-        "start": "export NODE_ENV=production || set NODE_ENV=production && node server.js",
-        "dev": "export NODE_ENV=development || set NODE_ENV=development && nodemon server.js",
+        "start": "NODE_ENV=production node ./server/server.ts",
+        "dev": "NODE_ENV=development && ts-node-dev --project tsconfig.json --respawn --inspect --transpile-only ./server/server.ts",
         "build": "cd client && npm install && npm run build"
     },
-    "author": "",
-    "license": "ISC",
     "dependencies": {
         "axios": "^0.26.1",
         "bcrypt": "^5.0.1",
@@ -27,6 +24,8 @@
     },
     "devDependencies": {
         "@types/node": "^20.4.10",
-        "typescript": "^5.1.6"
+        "typescript": "^5.1.6",
+        "@types/express": "^4.17.14",
+        "ts-node-dev": "^2.0.0"
     }
 }
