@@ -43,10 +43,10 @@ export const gh_scrapping = async (req, res) => {
                         .find(".pinned-item-meta")
                         .each((k, e) => {
                             if (k == 0) {
-                                stars = $(e).text().trim();
+                                stars = parseInt($(e).text().trim());
                             }
                             if (k == 1) {
-                                forks = $(e).text().trim();
+                                forks = parseInt($(e).text().trim());
                             }
                         });
                     let pinned_repo = {
@@ -134,10 +134,10 @@ export const cc_scrapping = async (req, res) => {
             country_ranking = 0;
         $(content1).each((i, elem) => {
             if (i == 0) {
-                global_ranking = $(elem).find("a strong").text();
+                global_ranking = parseInt($(elem).find("a strong").text());
             }
             if (i == 1) {
-                country_ranking = $(elem).find("a strong").text();
+                country_ranking = parseInt($(elem).find("a strong").text());
             }
         });
         // const global_ranking = content
@@ -199,13 +199,13 @@ export const cf_scrapping = async (req, res) => {
                     .find("span")
                     .each((j, spa) => {
                         if (i == 0 && j == 0) {
-                            curr_rating = $(spa).text();
+                            curr_rating = parseInt($(spa).text());
                         }
                         if (i == 0 && j == 3) {
-                            max_rating = $(spa).text();
+                            max_rating = parseInt($(spa).text());
                         }
                         if (i == 1 && j == 0) {
-                            contributions = $(spa).text();
+                            contributions = parseInt($(spa).text());
                         }
                     });
             });

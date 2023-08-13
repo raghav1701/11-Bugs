@@ -7,15 +7,12 @@ import { auth } from "../controllers";
 // });
 
 export const attachRoutes = (router: Router): void => {
-    // Get a User
-    router.get("/user", auth.isAuthenticated);
-
     // Set-up Signup Route
-    router.post("/signup", auth.signup);
+    router.post("/auth/signup", auth.signup);
 
     // Set-up Signin Route
-    router.post("/signin", auth.signin);
+    router.post("/auth/signin", auth.signin);
 
     // Set-up Logout Route
-    router.get("/logout", auth.logout);
+    router.get("/auth/logout", auth.logout);
 };
