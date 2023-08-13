@@ -1,18 +1,20 @@
-require("dotenv").config();
-const jwt = require("jsonwebtoken");
-const User = require("../models/User");
+import dotenv from "dotenv";
+import jwt from "jsonwebtoken";
+import User from "../models/User.js";
 
-exports.accessExpiry = 60 * 15; //  15 minutes
-exports.refreshExpiry = 60 * 60 * 24 * 30; //  30 days
+dotenv.config();
 
-//Set the cookies and create a token
-exports.setCookies = (res, user) => {
+export const accessExpiry = 60 * 15; // 15 minutes
+export const refreshExpiry = 60 * 60 * 24 * 30; // 30 days
+
+// Set the cookies and create a token
+export const setCookies = (res, user) => {
     try {
-        const token = this.createJWT(user);
-        const refreshToken = this.createRefreshToken(user);
+        const token = createJWT(user);
+        const refreshToken = createRefreshToken(user);
         res.cookie("access", token, {
             httpOnly: true,
-            maxAge: this.accessExpiry * 1000,
+            maxAge: accessExpiry * 1000,
         });
         res.cookie(
             "user",
@@ -21,12 +23,12 @@ exports.setCookies = (res, user) => {
             }),
             {
                 httpOnly: false,
-                maxAge: this.accessExpiry * 1000,
+                maxAge: accessExpiry * 1000,
             },
         );
         res.cookie("refresh", refreshToken, {
             httpOnly: true,
-            maxAge: this.refreshExpiry * 1000,
+            maxAge: refreshExpiry * 1000,
         });
 
         return null;
@@ -36,7 +38,7 @@ exports.setCookies = (res, user) => {
 };
 
 // Create a new jwt token
-exports.createJWT = (user) => {
+export const createJWT = (user) => {
     try {
         return jwt.sign(
             {
@@ -44,7 +46,7 @@ exports.createJWT = (user) => {
             },
             process.env.JWT_SECRET,
             {
-                expiresIn: this.accessExpiry,
+                expiresIn: accessExpiry,
             },
         );
     } catch (e) {
@@ -53,24 +55,24 @@ exports.createJWT = (user) => {
 };
 
 // Create a new refresh token
-exports.createRefreshToken = (user) => {
+export const createRefreshToken = (user) => {
     return jwt.sign({ _id: user._id }, process.env.JWT_SECRET, {
-        expiresIn: this.refreshExpiry,
+        expiresIn: refreshExpiry,
     });
 };
 
 // Generate access token using refresh token
-exports.regenerateAccessToken = async (refreshToken) => {
+export const regenerateAccessToken = async (refreshToken) => {
     if (!refreshToken) return null;
-    const ver = this.verifyToken(refreshToken);
+    const ver = verifyToken(refreshToken);
     if (!ver) return null;
     const user = await User.findById(ver._id);
     if (!user) return null;
-    return this.createJWT(user);
+    return createJWT(user);
 };
 
 // Verify a token
-exports.verifyToken = (token) => {
+export const verifyToken = (token) => {
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         return decoded;

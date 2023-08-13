@@ -1,18 +1,18 @@
-const cheerio = require("cheerio");
-const pretty = require("pretty");
-const router = require("express").Router();
-const axios = require("axios");
-const scoreController = require("./scoreController");
-const errorHandler = require("../handler/error");
-const User = require("../models/User");
+import cheerio from "cheerio";
+import { Router } from "express";
+import axios from "axios";
+import * as scoreController from "./scoreController.js";
+import * as errorHandler from "../handler/error.js";
+
+const router = Router();
 
 const htmlparser = async (url) => {
     const { data } = await axios.get(url);
     return data;
 };
 
-// github scrapping
-exports.gh_scrapping = async (req, res) => {
+// github scraping
+export const gh_scrapping = async (req, res) => {
     try {
         const username = req.params.gh_name;
         if (!username) throw Error("Username Unavailable");
@@ -100,7 +100,7 @@ exports.gh_scrapping = async (req, res) => {
                 { value: star, label: "Star" },
                 { value: repos, label: "Repository Count" },
                 { value: commits, label: "Total Commits" },
-                { value: contributions, label: "Cntributions" },
+                { value: contributions, label: "Contributions" },
             ],
             other: { value: pinned_repos, label: "Pinned Repositories" },
             score,
@@ -110,8 +110,8 @@ exports.gh_scrapping = async (req, res) => {
     }
 };
 
-//codechef scrapping
-exports.cc_scrapping = async (req, res) => {
+// codechef scraping
+export const cc_scrapping = async (req, res) => {
     try {
         const username = req.params.cc_name;
         if (!username) throw Error("Username Unavailable");
@@ -128,7 +128,7 @@ exports.cc_scrapping = async (req, res) => {
         // max rating
         const max_rating = content.find("small").text().match(/\d+/g)[0];
         // ranking
-        // gloabl
+        // global
         const content1 = content.find(".rating-ranks ul").children();
         var global_ranking = 0,
             country_ranking = 0;
@@ -161,7 +161,7 @@ exports.cc_scrapping = async (req, res) => {
             stats: [
                 { value: stars, label: "Stars" },
                 { value: max_rating, label: "Maximum Rating" },
-                { value: global_ranking, label: "Gloabal Ranking" },
+                { value: global_ranking, label: "Global Ranking" },
                 { value: country_ranking, label: "Country Ranking" },
                 { value: fully_solved, label: "Fully Solved Questions" },
                 {
@@ -175,8 +175,8 @@ exports.cc_scrapping = async (req, res) => {
     }
 };
 
-//codeForces scrapping
-exports.cf_scrapping = async (req, res) => {
+// codeForces scraping
+export const cf_scrapping = async (req, res) => {
     try {
         const username = req.params.cf_name;
         if (!username) throw Error("Username Unavailable");
@@ -253,3 +253,5 @@ exports.cf_scrapping = async (req, res) => {
         errorHandler.handleInternalServer(res);
     }
 };
+
+export default router;

@@ -1,7 +1,7 @@
-const router = require("express").Router();
-const authController = require("../controller/authController");
-const errorHandler = require("../handler/error");
-const User = require("../models/User");
+import express from "express";
+const router = express.Router();
+import * as errorHandler from "../handler/error.js";
+import User from "../models/User.js";
 
 router.post("/", async (req, res) => {
     try {
@@ -16,4 +16,4 @@ router.post("/", async (req, res) => {
     }
 });
 
-module.exports = router;
+export default router;

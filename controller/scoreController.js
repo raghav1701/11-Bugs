@@ -1,5 +1,6 @@
-require("dotenv").config();
-const User = require("../models/User");
+import dotenv from "dotenv";
+
+dotenv.config();
 
 // Constants
 // 0-1
@@ -17,7 +18,7 @@ const weights = {
 // Calculate the github profile score
 // stars, number of repos, numbers of commits
 // 0-100
-exports.calculateGithub = (details) => {
+export const calculateGithub = (details) => {
     try {
         //   Basic
         // const { star, contributions, repos, commits } = details;
@@ -53,7 +54,7 @@ exports.calculateGithub = (details) => {
     }
 };
 
-exports.calculateCodeForces = (details) => {
+export const calculateCodeForces = (details) => {
     try {
         const { rating } = details;
         var cost = 100 / 10;
@@ -67,7 +68,7 @@ exports.calculateCodeForces = (details) => {
     }
 };
 
-exports.calculateCodeChef = (details) => {
+export const calculateCodeChef = (details) => {
     try {
         const { rating } = details;
         var cost = 100 / 22;
@@ -82,7 +83,7 @@ exports.calculateCodeChef = (details) => {
 // Calculate the total karma
 // github, codechef, codeforces, upvotes, downvotes
 // 0-100
-exports.calculateKarma = (details) => {
+export const calculateKarma = (details) => {
     try {
         //   Basic
         const profiles =

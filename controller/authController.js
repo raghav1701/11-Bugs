@@ -1,10 +1,10 @@
-require("dotenv").config();
-const bcrypt = require("bcrypt");
-const User = require("../models/User");
+import dotenv from "dotenv";
+dotenv.config();
+import bcrypt from "bcrypt";
+import User from "../models/User.js";
 const saltRounds = 10;
-const JWT = require("./JWTController");
-const cookie = require("cookie");
-const errorHander = require("../handler/error");
+import * as JWT from "./JWTController.js";
+import * as errorHander from "../handler/error.js";
 
 // ----------------------------------------------------Helper Functions-----------------------------------------------------
 
@@ -30,7 +30,7 @@ const comparePassword = async (password, hash) => {
 
 //------------------------------------------------Middleware for authorization and authentication checks---------------------------------------------
 
-exports.isAuthenticated = async (req, res, next) => {
+export const isAuthenticated = async (req, res, next) => {
     try {
         const token = req.cookies.access;
         const refreshToken = req.cookies.refresh;
@@ -69,7 +69,7 @@ exports.isAuthenticated = async (req, res, next) => {
 
 //---------------------------------------------------------Authentication Controllers-------------------------------------------------
 
-exports.signup = async (req, res) => {
+export const signup = async (req, res) => {
     try {
         if (
             !req.body.name ||
@@ -123,7 +123,7 @@ exports.signup = async (req, res) => {
     }
 };
 
-exports.signin = async (req, res) => {
+export const signin = async (req, res) => {
     try {
         if (!req.body.email || !req.body.password) {
             return errorHander.handleBadRequest(res);
@@ -167,7 +167,7 @@ exports.signin = async (req, res) => {
     }
 };
 
-exports.logout = (req, res) => {
+export const logout = (req, res) => {
     res.cookie("access", "", {
         httpOnly: true,
     });
