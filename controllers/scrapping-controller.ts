@@ -1,8 +1,8 @@
 import cheerio from "cheerio";
 import { Router } from "express";
 import axios from "axios";
-import * as scoreController from "./scoreController.js";
-import * as errorHandler from "../handler/error.js";
+import * as scoreController from "./score-controller";
+import { errorHandler } from "../handler";
 
 const router = Router();
 

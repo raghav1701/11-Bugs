@@ -1,5 +1,5 @@
 import User from "../models/User";
-import * as errorHandler from "../handler/error.js";
+import { errorHandler } from "../handler";
 
 export const recommend = async (req, res) => {
     try {

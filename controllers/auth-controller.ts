@@ -3,8 +3,8 @@ dotenv.config();
 import bcrypt from "bcrypt";
 import User from "../models/User.js";
 const saltRounds = 10;
-import * as JWT from "./JWTController.js";
-import * as errorHander from "../handler/error.js";
+import * as JWT from "../middlewares/JWTController";
+import { errorHandler } from "../handler";
 
 // ----------------------------------------------------Helper Functions-----------------------------------------------------
 
@@ -36,7 +36,7 @@ export const isAuthenticated = async (req, res, next) => {
         const refreshToken = req.cookies.refresh;
         if (!token && !refreshToken) {
             // res.status(403).json({ error: "Unverified user" });
-            errorHander.handleUnauthorized(res);
+            errorHandler.handleUnauthorized(res);
             return;
         }
         let user = JWT.verifyToken(token);
@@ -44,7 +44,7 @@ export const isAuthenticated = async (req, res, next) => {
             const access = await JWT.regenerateAccessToken(refreshToken);
             if (!access) {
                 // res.status(403).json({ error: "Invalid Token" });
-                errorHander.handleUnauthorized(res);
+                errorHandler.handleUnauthorized(res);
                 return;
             }
             user = JWT.verifyToken(access);
@@ -61,7 +61,7 @@ export const isAuthenticated = async (req, res, next) => {
         // req.user = user;
         next();
     } catch (e) {
-        errorHander.handleInternalServer(res);
+        errorHandler.handleInternalServer(res);
     }
 };
 
@@ -77,7 +77,7 @@ export const signup = async (req, res) => {
             !req.body.username ||
             !req.body.password
         ) {
-            errorHander.handleBadRequest(res);
+            errorHandler.handleBadRequest(res);
             // res.status(400).send({ message: "All fields is required" });
             return;
         }
@@ -86,7 +86,7 @@ export const signup = async (req, res) => {
         let regex = new RegExp("[a-z0-9]+@[a-z]+.[a-z]{2,3}");
         const result = await regex.test(req.body.email);
         if (result === false) {
-            errorHander.handleBadRequest(res, "Invalid Email Address");
+            errorHandler.handleBadRequest(res, "Invalid Email Address");
             // res.status(400).send({ message: "Email is Badly Formatted" });
             return;
         }
@@ -94,11 +94,11 @@ export const signup = async (req, res) => {
         //Check if User is Already Exists
         const isUser = await userExists(req.body.email);
         if (isUser)
-            return errorHander.handleConflict(res, "Email already in use.");
+            return errorHandler.handleConflict(res, "Email already in use.");
 
         const userName = await User.findOne({ username: req.body.username });
         if (userName)
-            return errorHander.handleConflict(res, "Username already in use.");
+            return errorHandler.handleConflict(res, "Username already in use.");
         // return res
         //   .status(409)
         //   .send({ message: "User Already Exist. Please Login" });
@@ -118,7 +118,7 @@ export const signup = async (req, res) => {
         // newUser.password = "";
         res.status(200).json({ _id: newUser._id });
     } catch (e) {
-        errorHander.handleInternalServer(res);
+        errorHandler.handleInternalServer(res);
         // res.json({ error: e || "Someting went wrong" });
     }
 };
@@ -126,7 +126,7 @@ export const signup = async (req, res) => {
 export const signin = async (req, res) => {
     try {
         if (!req.body.email || !req.body.password) {
-            return errorHander.handleBadRequest(res);
+            return errorHandler.handleBadRequest(res);
             // res.status(400).send({ message: "All fields is required" });
         }
 
@@ -134,7 +134,7 @@ export const signin = async (req, res) => {
         let regex = new RegExp("[a-z0-9]+@[a-z]+.[a-z]{2,3}");
         const result = await regex.test(req.body.email);
         if (result === false) {
-            errorHander.handleBadRequest(res, "Invalid Email address");
+            errorHandler.handleBadRequest(res, "Invalid Email address");
             // res.status(400).send({ message: "Email is Badly Formatted" });
             return;
         }
@@ -144,7 +144,7 @@ export const signin = async (req, res) => {
 
         //If user does not exists then throw error
         if (!user)
-            return errorHander.handleNotFound(res, "Invalid Credentials");
+            return errorHandler.handleNotFound(res, "Invalid Credentials");
         // return res
         //   .status(400)
         //   .send({ message: "User does not exists. Please Signup" });
@@ -155,7 +155,7 @@ export const signin = async (req, res) => {
             user.password,
         );
         if (!compareHashedPassword)
-            return errorHander.handleBadRequest(res, "Invalid Credentials");
+            return errorHandler.handleBadRequest(res, "Invalid Credentials");
         // return res.status(400).send({ message: "Invalid Credentials" });
         //set a token
         const err = JWT.setCookies(res, user);

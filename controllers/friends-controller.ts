@@ -1,5 +1,5 @@
 import User from "../models/User";
-import * as errorHandler from "../handler/error.js";
+import { errorHandler } from "../handler";
 
 export const getAllFriends = async (req, res) => {
     try {
