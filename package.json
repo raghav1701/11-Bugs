@@ -3,6 +3,7 @@
     "version": "1.0.0",
     "description": "",
     "main": "server.js",
+    "type": "module",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
         "start": "export NODE_ENV=production || set NODE_ENV=production && node server.js",
@@ -23,5 +24,9 @@
         "jsonwebtoken": "^8.5.1",
         "mongoose": "^6.2.8",
         "pretty": "^2.0.0"
+    },
+    "devDependencies": {
+        "@types/node": "^20.4.10",
+        "typescript": "^5.1.6"
     }
 }

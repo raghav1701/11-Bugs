@@ -1,8 +1,9 @@
-const router = require("express").Router();
-const authController = require("../controller/authController");
-const User = require("../models/User");
-const errorHander = require("../handler/error");
-const scoreController = require("../controller/scoreController");
+import express from "express";
+const router = express.Router();
+import * as authController from "../controller/authController.js";
+import User from "../models/User.js";
+import * as errorHander from "../handler/error.js";
+import * as scoreController from "../controller/scoreController.js";
 
 // Update a profile
 router.patch("/", authController.isAuthenticated, async (req, res) => {
@@ -132,4 +133,4 @@ router.patch("/handle", authController.isAuthenticated, async (req, res) => {
     }
 });
 
-module.exports = router;
+export default router;

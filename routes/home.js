@@ -1,7 +1,8 @@
-const router = require("express").Router();
-const authController = require("../controller/authController");
-const errorHandler = require("../handler/error");
-const User = require("../models/User");
+import express from "express";
+const router = express.Router();
+import * as authController from "../controller/authController.js";
+import * as errorHandler from "../handler/error.js";
+import User from "../models/User.js";
 
 router.post("/recommend", async (req, res) => {
     try {
@@ -251,4 +252,4 @@ router.post(
     },
 );
 
-module.exports = router;
+export default router;

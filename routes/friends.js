@@ -1,7 +1,8 @@
-const router = require("express").Router();
-const authController = require("../controller/authController");
-const User = require("../models/User");
-const errorHandler = require("../handler/error");
+import express from "express";
+const router = express.Router();
+import * as authController from "../controller/authController.js";
+import User from "../models/User.js";
+import * as errorHandler from "../handler/error.js";
 
 // Get all friends
 router.get("/", authController.isAuthenticated, async (req, res) => {
@@ -157,4 +158,4 @@ router.post("/decline", authController.isAuthenticated, async (req, res) => {
     }
 });
 
-module.exports = router;
+export default router;
