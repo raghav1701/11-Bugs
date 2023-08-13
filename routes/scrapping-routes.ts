@@ -1,11 +1,10 @@
-import express from "express";
-const router = express.Router();
-import * as scrappingController from "../controllers/scrappingController.js";
+import { Router } from "express";
+import { scrapping } from "../controllers";
 
-router.post("/github/:gh_name", scrappingController.gh_scrapping);
+export const attachRoutes = (router: Router): void => {
+    router.post("/scrapping/github/:gh_name", scrapping.gh_scrapping);
 
-router.post("/codechef/:cc_name", scrappingController.cc_scrapping);
+    router.post("/scrapping/codechef/:cc_name", scrapping.cc_scrapping);
 
-router.post("/codeforces/:cf_name", scrappingController.cf_scrapping);
-
-export default router;
+    router.post("/scrapping/codeforces/:cf_name", scrapping.cf_scrapping);
+};

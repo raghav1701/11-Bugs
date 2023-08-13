@@ -2,7 +2,7 @@ import User from "../models/User";
 import * as scoreController from "./score-controller";
 import { errorHandler } from "../handler";
 
-export const updateProfile = async (req, res) => {
+export const updateUser = async (req, res) => {
     try {
         const update = await User.findByIdAndUpdate(req.user._id, {
             name: req.body.name || req.user.name,
@@ -16,7 +16,7 @@ export const updateProfile = async (req, res) => {
     }
 };
 
-export const updateProfileScores = async (req, res) => {
+export const updateUserScores = async (req, res) => {
     try {
         const { code, score, userID } = req.body;
 
@@ -58,6 +58,7 @@ export const updateProfileScores = async (req, res) => {
 export const getUserProfile = async (req, res) => {
     try {
         const id = req.params.id;
+        console.log(id);
         const user = await User.findById(id).select("-password").populate({
             path: "friends received sent",
             select: "name avatar karma",
