@@ -1,14 +1,20 @@
 import dotenv from "dotenv";
 dotenv.config();
 import bcrypt from "bcrypt";
-import User from "../models/User.js";
 const saltRounds = 10;
-import * as JWT from "../middlewares/JWTController";
+import { jwtCheck } from "../middlewares";
 import { errorHandler } from "../handler";
+import User from "../models/User";
+import { Request, Response } from "express";
+import joi from "joi";
 
-// ----------------------------------------------------Helper Functions-----------------------------------------------------
+const signUpSchema = joi.object({
+    name: joi.string().min(1).max(32).required(),
+    username: joi.string().min(1).max(32).required(),
+    email: joi.string().email().required(),
+    password: joi.string().required(),
+});
 
-//check if a user is exists or not
 const userExists = async (email, username?: string) => {
     const isUser = await User.findOne({ email: email });
     return isUser;
@@ -26,50 +32,7 @@ const comparePassword = async (password, hash) => {
     return result;
 };
 
-// -----------------------------------------------------End of helper functions-------------------------------------------------
-
-//------------------------------------------------Middleware for authorization and authentication checks---------------------------------------------
-
-export const isAuthenticated = async (req, res, next) => {
-    try {
-        const token = req.cookies.access;
-        const refreshToken = req.cookies.refresh;
-        if (!token && !refreshToken) {
-            // res.status(403).json({ error: "Unverified user" });
-            errorHandler.handleUnauthorized(res);
-            return;
-        }
-        let user = JWT.verifyToken(token);
-        if (!user) {
-            const access = await JWT.regenerateAccessToken(refreshToken);
-            if (!access) {
-                // res.status(403).json({ error: "Invalid Token" });
-                errorHandler.handleUnauthorized(res);
-                return;
-            }
-            user = JWT.verifyToken(access);
-            res.cookie("access", access, {
-                httpOnly: true,
-                maxAge: JWT.accessExpiry * 1000,
-            });
-            res.cookie("user", JSON.stringify(user), {
-                httpOnly: false,
-                maxAge: JWT.accessExpiry * 1000,
-            });
-        }
-        req.user = await User.findById(user._id).select("-password");
-        // req.user = user;
-        next();
-    } catch (e) {
-        errorHandler.handleInternalServer(res);
-    }
-};
-
-// --------------------------------------------------------End of Middleware----------------------------------------------------------
-
-//---------------------------------------------------------Authentication Controllers-------------------------------------------------
-
-export const signup = async (req, res) => {
+export const signup = async (req: Request, res: Response) => {
     try {
         if (
             !req.body.name ||
@@ -78,7 +41,6 @@ export const signup = async (req, res) => {
             !req.body.password
         ) {
             errorHandler.handleBadRequest(res);
-            // res.status(400).send({ message: "All fields is required" });
             return;
         }
 
@@ -87,7 +49,6 @@ export const signup = async (req, res) => {
         const result = await regex.test(req.body.email);
         if (result === false) {
             errorHandler.handleBadRequest(res, "Invalid Email Address");
-            // res.status(400).send({ message: "Email is Badly Formatted" });
             return;
         }
 
@@ -99,9 +60,6 @@ export const signup = async (req, res) => {
         const userName = await User.findOne({ username: req.body.username });
         if (userName)
             return errorHandler.handleConflict(res, "Username already in use.");
-        // return res
-        //   .status(409)
-        //   .send({ message: "User Already Exist. Please Login" });
 
         // If User is not already exist and all fields are valid then we will save the user in our database
         const newUser = new User({
@@ -112,8 +70,8 @@ export const signup = async (req, res) => {
         });
         await newUser.save();
 
-        // Get JWT token
-        const err = JWT.setCookies(res, newUser);
+        // Get jwtCheck token
+        const err = jwtCheck.setCookies(res, newUser);
         if (err) throw err;
         // newUser.password = "";
         res.status(200).json({ _id: newUser._id });
@@ -123,7 +81,7 @@ export const signup = async (req, res) => {
     }
 };
 
-export const signin = async (req, res) => {
+export const signin = async (req: Request, res: Response) => {
     try {
         if (!req.body.email || !req.body.password) {
             return errorHandler.handleBadRequest(res);
@@ -158,7 +116,7 @@ export const signin = async (req, res) => {
             return errorHandler.handleBadRequest(res, "Invalid Credentials");
         // return res.status(400).send({ message: "Invalid Credentials" });
         //set a token
-        const err = JWT.setCookies(res, user);
+        const err = jwtCheck.setCookies(res, user);
         if (err) throw err;
         // user.password = "";
         res.status(200).json({ _id: user._id });
@@ -167,7 +125,7 @@ export const signin = async (req, res) => {
     }
 };
 
-export const logout = (req, res) => {
+export const logout = (req: Request, res: Response) => {
     res.cookie("access", "", {
         httpOnly: true,
     });
