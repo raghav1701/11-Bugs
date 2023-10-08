@@ -137,5 +137,3 @@ export const logout = (req: Request, res: Response) => {
     });
     res.json({ success: "Logged out successfully." });
 };
-
-// -------------------------------------------------------------End of Authroization Controllers -----------------------------------------------------
