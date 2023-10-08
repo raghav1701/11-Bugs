@@ -14,10 +14,10 @@ export const getAllFriends = async (req, res) => {
 
 export const createFriendRequest = async (req, res) => {
     try {
-        if (req.body.userID === req.user._id)
+        if (req.body.userId === req.user._id.toString())
             return errorHandler.handleBadRequest(res);
 
-        const user = await User.findById(req.body.userID);
+        const user = await User.findById(req.body.userId);
         if (!user) return errorHandler.handleBadRequest(res, "User not found!");
 
         const already = user.friends.find((u) => u.equals(req.user._id));
@@ -94,13 +94,13 @@ export const removeFriend = async (req, res) => {
 
 export const acceptRequest = async (req, res) => {
     try {
-        const userID = req.body.user;
-        if (!userID) return errorHandler.handleBadRequest(res);
+        const userId = req.body.user;
+        if (!userId) return errorHandler.handleBadRequest(res);
 
-        const user = await User.findById(userID);
+        const user = await User.findById(userId);
         if (!user) return errorHandler.handleNotFound(res, "User Not Found!");
 
-        const received = req.user.received.find((r) => r.equals(userID));
+        const received = req.user.received.find((r) => r.equals(userId));
         if (!received) return errorHandler.handleBadRequest(res);
 
         // Update the logged in user
@@ -123,14 +123,14 @@ export const acceptRequest = async (req, res) => {
 
 export const declineRequest = async (req, res) => {
     try {
-        const userID = req.body.user;
-        if (!userID) return errorHandler.handleBadRequest(res);
+        const userId = req.body.user;
+        if (!userId) return errorHandler.handleBadRequest(res);
 
-        const user = await User.findById(userID);
+        const user = await User.findById(userId);
         if (!user) return errorHandler.handleNotFound(res, "User Not Found!");
 
         if (req.user.received) {
-            const request = req.user.received.find((r) => r.equals(userID));
+            const request = req.user.received.find((r) => r.equals(userId));
             if (!request) return errorHandler.handleBadRequest(res);
         }
 
@@ -138,7 +138,7 @@ export const declineRequest = async (req, res) => {
         await User.findByIdAndUpdate(req.user._id, {
             $pull: { received: user._id },
         });
-        await User.findByIdAndUpdate(userID, {
+        await User.findByIdAndUpdate(userId, {
             $pull: { sent: req.user._id },
         });
 

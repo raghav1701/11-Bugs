@@ -1,7 +1,9 @@
+import { NextFunction, Response } from "express";
 import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
 import { errorHandler } from "../handler";
 import User from "../models/User.js";
+import { IPrivateRequest } from "../utils";
 
 dotenv.config();
 
@@ -82,7 +84,11 @@ export const verifyToken = (token) => {
     }
 };
 
-export const jwtCheck = async (req, res, next) => {
+export const jwtCheck = async (
+    req: IPrivateRequest,
+    res: Response,
+    next: NextFunction,
+) => {
     try {
         const token = req.cookies.access;
         const refreshToken = req.cookies.refresh;

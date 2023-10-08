@@ -4,7 +4,7 @@ import { errorHandler } from "../handler";
 
 export const updateUser = async (req, res) => {
     try {
-        const update = await User.findByIdAndUpdate(req.user._id, {
+        await User.findByIdAndUpdate(req.user._id, {
             name: req.body.name || req.user.name,
             email: req.body.email || req.user.email,
             resume: req.body.resume || req.user.resume,
@@ -80,7 +80,7 @@ export const upvoteProfile = async (req, res) => {
         await User.findByIdAndUpdate(id, {
             $pull: { review: { user: req.user._id } },
         });
-        const update = await User.findByIdAndUpdate(id, {
+        await User.findByIdAndUpdate(id, {
             $push: { review: { user: req.user._id, value: 1 } },
         });
         res.status(200).json({ message: "Upvoted!" });

@@ -12,13 +12,13 @@ export const attachRoutes = (router: Router): void => {
     router.patch("/user/score", user.updateUserScores);
 
     // Return user profile
-    router.post("/user/:id", user.getUserProfile);
+    router.get("/user/:id", user.getUserProfile);
 
     // Upvote user
-    router.post("/user/:id/upvote", jwtCheck, user.upvoteProfile);
+    router.get("/user/:id/upvote", jwtCheck, user.upvoteProfile);
 
     // Downvote user
-    router.post("/user/:id/downvote", jwtCheck, user.downvoteProfile);
+    router.get("/user/:id/downvote", jwtCheck, user.downvoteProfile);
 
     // Update a handle
     router.patch("/user/handle", jwtCheck, user.updateHandle);
