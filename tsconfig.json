@@ -10,6 +10,6 @@
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true
     },
-    "include": ["./**/*.ts"],
+    "include": ["./**/*.ts", "models/User.js"],
     "lib": ["es2015", "es6"]
 }

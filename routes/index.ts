@@ -13,9 +13,9 @@ export const attachRoutes = (app: any): void => {
     router.use(bodyParser.json());
 
     auth.attachRoutes(router);
-    friend.attachRoutes(router);
-    home.attachRoutes(router);
-    user.attachRoutes(router);
+    // friend.attachRoutes(router);
+    // home.attachRoutes(router);
+    // user.attachRoutes(router);
     scrapping.attachRoutes(router);
     search.attachRoutes(router);
 };

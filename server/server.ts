@@ -22,7 +22,7 @@ routes.attachRoutes(app);
 const PORT = process.env.PORT || 6001;
 mongoose
     .connect(process.env.MONGO_URL, {
-        dbName: "SaaS",
+        dbName: "11-Bugs",
     })
     .then(() => {
         app.listen(PORT, () => console.log(`Server Port: ${PORT}`));
