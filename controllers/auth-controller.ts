@@ -2,11 +2,12 @@ import dotenv from "dotenv";
 dotenv.config();
 import bcrypt from "bcrypt";
 const saltRounds = 10;
-import { jwtCheck } from "../middlewares";
+
 import { errorHandler } from "../handler";
 import User from "../models/User";
 import { Request, Response } from "express";
 import joi from "joi";
+import { setCookies } from "../middlewares";
 
 const signUpSchema = joi.object({
     name: joi.string().min(1).max(32).required(),
@@ -71,7 +72,7 @@ export const signup = async (req: Request, res: Response) => {
         await newUser.save();
 
         // Get jwtCheck token
-        const err = jwtCheck.setCookies(res, newUser);
+        const err = setCookies(res, newUser);
         if (err) throw err;
         // newUser.password = "";
         res.status(200).json({ _id: newUser._id });
@@ -116,7 +117,7 @@ export const signin = async (req: Request, res: Response) => {
             return errorHandler.handleBadRequest(res, "Invalid Credentials");
         // return res.status(400).send({ message: "Invalid Credentials" });
         //set a token
-        const err = jwtCheck.setCookies(res, user);
+        const err = setCookies(res, user);
         if (err) throw err;
         // user.password = "";
         res.status(200).json({ _id: user._id });

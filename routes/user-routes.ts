@@ -1,11 +1,12 @@
 import { Router } from "express";
 import { auth, user } from "../controllers";
+import { jwtCheck } from "../middlewares";
 
 export const attachRoutes = (router: Router): void => {
     //todo: get current user
 
     // Update User
-    router.patch("/user", auth.isAuthenticated, user.updateUser);
+    router.patch("/user", jwtCheck, user.updateUser);
 
     // Update user score
     router.patch("/user/score", user.updateUserScores);
@@ -14,15 +15,11 @@ export const attachRoutes = (router: Router): void => {
     router.post("/user/:id", user.getUserProfile);
 
     // Upvote user
-    router.post("/user/:id/upvote", auth.isAuthenticated, user.upvoteProfile);
+    router.post("/user/:id/upvote", jwtCheck, user.upvoteProfile);
 
     // Downvote user
-    router.post(
-        "/user/:id/downvote",
-        auth.isAuthenticated,
-        user.downvoteProfile,
-    );
+    router.post("/user/:id/downvote", jwtCheck, user.downvoteProfile);
 
     // Update a handle
-    router.patch("/user/handle", auth.isAuthenticated, user.updateHandle);
+    router.patch("/user/handle", jwtCheck, user.updateHandle);
 };
