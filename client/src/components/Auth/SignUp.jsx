@@ -66,7 +66,7 @@ const Signup = (props) => {
             setLoader(true);
 
             let res = await fetch(
-                `${process.env.REACT_APP_BASE_URL}/auth/signup`,
+                `${process.env.REACT_APP_BASE_URL}/api/v1/auth/signup`,
                 {
                     method: "POST",
                     headers: {
