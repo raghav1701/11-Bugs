@@ -57,7 +57,7 @@ const Login = () => {
             }
             setLoader(true);
             let res = await fetch(
-                `${process.env.REACT_APP_BASE_URL}/auth/signin`,
+                `${process.env.REACT_APP_BASE_URL}/api/v1/auth/signin`,
                 {
                     method: "POST",
                     headers: {

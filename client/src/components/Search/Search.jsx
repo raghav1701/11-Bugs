@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
 const Search = () => {
     const classes = useStyles();
     const theme = useTheme();
-    const [query, setQuery] = useState("");
+    const [userName, setUserName] = useState("");
     const [error, setError] = useState("");
     const [search, setSearch] = useState(false);
     const [data, setData] = useState({});
@@ -42,15 +42,15 @@ const Search = () => {
 
     const handleQueryChange = (e) => {
         setSearch(false);
-        setQuery(e.target.value);
+        setUserName(e.target.value);
     };
 
     const handleSearch = async () => {
         setSearch(true);
         try {
             const res = await axios.post(
-                `${process.env.REACT_APP_BASE_URL}/search`,
-                { query },
+                `${process.env.REACT_APP_BASE_URL}/api/v1/search`,
+                { userName },
             );
             setData(res.data.user);
         } catch (e) {
@@ -80,7 +80,7 @@ const Search = () => {
                                     width: "100%",
                                 }}>
                                 <TextField
-                                    value={query}
+                                    value={userName}
                                     onChange={handleQueryChange}
                                     sx={{ width: "100%" }}
                                     placeholder="Try a user handle here..."
@@ -103,19 +103,19 @@ const Search = () => {
             ) : search ? (
                 <>
                     <Stats
-                        handle={query}
+                        handle={userName}
                         code={"Github"}
                         // userID={null}
                         scoreSize={128}
                     />
                     <Stats
-                        handle={query}
+                        handle={userName}
                         code={"Codechef"}
                         // userID={null}
                         scoreSize={128}
                     />
                     <Stats
-                        handle={query}
+                        handle={userName}
                         code={"Codeforces"}
                         // userID={null}
                         scoreSize={128}
