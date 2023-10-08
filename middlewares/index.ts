@@ -1,1 +1,1 @@
-export * as jwtCheck from "./jwt-middleware";
+export * from "./jwt-middleware";

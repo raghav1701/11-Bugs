@@ -1,5 +1,6 @@
 import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
+import { errorHandler } from "../handler";
 import User from "../models/User.js";
 
 dotenv.config();
@@ -78,5 +79,40 @@ export const verifyToken = (token) => {
         return decoded;
     } catch (e) {
         return null;
+    }
+};
+
+export const jwtCheck = async (req, res, next) => {
+    try {
+        const token = req.cookies.access;
+        const refreshToken = req.cookies.refresh;
+        if (!token && !refreshToken) {
+            // res.status(403).json({ error: "Unverified user" });
+            errorHandler.handleUnauthorized(res);
+            return;
+        }
+        let user = verifyToken(token);
+        if (!user) {
+            const access = await regenerateAccessToken(refreshToken);
+            if (!access) {
+                // res.status(403).json({ error: "Invalid Token" });
+                errorHandler.handleUnauthorized(res);
+                return;
+            }
+            user = verifyToken(access);
+            res.cookie("access", access, {
+                httpOnly: true,
+                maxAge: accessExpiry * 1000,
+            });
+            res.cookie("user", JSON.stringify(user), {
+                httpOnly: false,
+                maxAge: accessExpiry * 1000,
+            });
+        }
+        req.user = await User.findById(user._id).select("-password");
+        // req.user = user;
+        next();
+    } catch (e) {
+        errorHandler.handleInternalServer(res);
     }
 };
