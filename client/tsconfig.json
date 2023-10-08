@@ -16,6 +16,6 @@
         "incremental": true,
         "typeRoots": ["node_modules/@types"]
     },
-    "include": ["./**/*.ts", "./**/*.tsx"],
+    "include": ["./**/*.ts", "./**/*.tsx", "src/App.jsx"],
     "exclude": ["node_modules"]
 }
