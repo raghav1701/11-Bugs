@@ -3,9 +3,10 @@
 import { AuthProvider } from "@/providers";
 import { theme } from "@/utils/theme";
 import { FunctionComponent, ReactElement, ReactNode } from "react";
-import { CssBaseline, styled, ThemeProvider } from "@mui/material";
+
 import { SnackbarProvider } from "notistack";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { CssBaseline, styled, ThemeProvider } from "@mui/material";
 
 const Main = styled("main")`
     min-height: 100vh;
