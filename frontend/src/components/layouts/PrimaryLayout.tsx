@@ -2,10 +2,8 @@
 
 import { AuthProvider } from "@/providers";
 import { theme } from "@/utils/theme";
-import { ThemeProvider } from "@emotion/react";
 import { FunctionComponent, ReactElement, ReactNode } from "react";
-import { CssBaseline, Typography } from "@mui/material";
-import { styled } from "styled-components";
+import { CssBaseline, styled, ThemeProvider } from "@mui/material";
 import { SnackbarProvider } from "notistack";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
