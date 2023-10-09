@@ -1,6 +1,12 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+import { PrimaryLayout } from "@/components/layouts";
+import { Navbar } from "@/components/pages/navbar";
 
-export default function Home() {
-    return <h1>Raghav</h1>;
-}
+import { TNextPageWithLayout } from "@/types";
+import { Typography } from "@mui/material";
+import { ReactElement } from "react";
+
+const Home: TNextPageWithLayout = (): ReactElement => {
+    return <Navbar />;
+};
+
+export default Home;
